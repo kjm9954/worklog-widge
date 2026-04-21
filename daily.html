@@ -942,75 +942,51 @@
     .side-row.routine-row,
     .side-row.routine-head { grid-template-columns: 46px 50px 52px minmax(60px, 1fr) 50px 80px 40px 20px; }
   }
-  /* ───── 모바일 대응 (Notion 임베드 · 태블릿 이하) ───── */
-  @media (max-width: 768px) {
-    /* 헤더: 제목 축소·부제 숨김·버튼 아이콘만 */
-    .app-header { padding: 8px 12px; gap: 6px; flex-wrap: wrap; }
-    .app-title { font-size: 1rem; }
-    .app-title-sub { display: none; }
-    .header-actions { gap: 4px; }
-    .header-actions .btn.sm { padding: 6px 8px; font-size: 0; }
-    .header-actions .btn.sm .icon { margin: 0; }
-    .theme-toggle { width: 30px; height: 30px; }
+  /* ───── 모바일 모드 (수동 토글 — :root[data-device="mobile"]) ─────
+     자동 @media 트리거 대신 헤더의 모바일 버튼으로만 활성화.
+     localStorage['worklog-device'] = 'pc'(기본) | 'mobile' */
+  :root[data-device="mobile"] .app-header { padding: 8px 12px; gap: 6px; flex-wrap: wrap; }
+  :root[data-device="mobile"] .app-title { font-size: 1rem; }
+  :root[data-device="mobile"] .app-title-sub { display: none; }
+  :root[data-device="mobile"] .header-actions { gap: 4px; }
+  :root[data-device="mobile"] .header-actions .btn.sm { padding: 6px 8px; font-size: 0; }
+  :root[data-device="mobile"] .header-actions .btn.sm .icon { margin: 0; }
+  :root[data-device="mobile"] .theme-toggle { width: 30px; height: 30px; }
 
-    /* 오늘 카드 래퍼 */
-    .daily-wrap { margin: 10px auto; padding: 0 10px; }
+  :root[data-device="mobile"] .daily-wrap { margin: 10px auto; padding: 0 10px; }
 
-    /* 상단 네비 — 오늘 버튼은 아래 줄로 */
-    .daily-nav { gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-    .daily-nav-btn { width: 28px; height: 28px; font-size: 12px; }
-    .daily-today-btn { padding: 0 10px; height: 28px; font-size: 12px; margin-left: auto; }
+  :root[data-device="mobile"] .daily-nav { gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  :root[data-device="mobile"] .daily-nav-btn { width: 28px; height: 28px; font-size: 12px; }
+  :root[data-device="mobile"] .daily-today-btn { padding: 0 10px; height: 28px; font-size: 12px; margin-left: auto; }
 
-    /* 요일 탭 — 좁은 폭에서도 유지 (flex: 1 기본값) */
-    .daily-day-tabs { gap: 3px; }
-    .daily-day-tab { padding: 4px 4px; font-size: 11px; min-width: 0; }
-    .daily-day-tab .daily-dots { margin-top: 2px; gap: 2px; }
-    .daily-day-tab .daily-dot { width: 3px; height: 3px; }
-    .daily-day-tab .daily-count { font-size: 10px; }
+  :root[data-device="mobile"] .daily-day-tabs { gap: 3px; }
+  :root[data-device="mobile"] .daily-day-tab { padding: 4px 4px; font-size: 11px; min-width: 0; }
+  :root[data-device="mobile"] .daily-day-tab .daily-dots { margin-top: 2px; gap: 2px; }
+  :root[data-device="mobile"] .daily-day-tab .daily-dot { width: 3px; height: 3px; }
+  :root[data-device="mobile"] .daily-day-tab .daily-count { font-size: 10px; }
 
-    /* 카드 헤더 — 패딩·폰트 축소 */
-    .daily-head { padding: 10px 12px; gap: 8px; }
-    .daily-date-big { font-size: 15px; }
-    .daily-date-dow { font-size: 11px; }
-    .daily-today-badge { font-size: 10px; padding: 1px 6px; }
-    .daily-summary { font-size: 10px; gap: 6px; flex-wrap: wrap; }
-    .daily-progress { width: 70px; height: 3px; margin-left: 0; }
+  :root[data-device="mobile"] .daily-head { padding: 10px 12px; gap: 8px; }
+  :root[data-device="mobile"] .daily-date-big { font-size: 15px; }
+  :root[data-device="mobile"] .daily-date-dow { font-size: 11px; }
+  :root[data-device="mobile"] .daily-today-badge { font-size: 10px; padding: 1px 6px; }
+  :root[data-device="mobile"] .daily-summary { font-size: 10px; gap: 6px; flex-wrap: wrap; }
+  :root[data-device="mobile"] .daily-progress { width: 70px; height: 3px; margin-left: 0; }
 
-    /* 카드 본문 테이블 — 가로 스크롤로 10컬럼 유지 */
-    .daily-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .daily-table { min-width: 620px; font-size: 12px; }
-    .daily-table th { padding: 6px 8px; font-size: 11px; }
-    .daily-table td { padding: 6px 8px; }
+  :root[data-device="mobile"] .daily-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  :root[data-device="mobile"] .daily-table { min-width: 620px; font-size: 12px; }
+  :root[data-device="mobile"] .daily-table th { padding: 6px 8px; font-size: 11px; }
+  :root[data-device="mobile"] .daily-table td { padding: 6px 8px; }
 
-    /* 추가 버튼 · 회고 입력 */
-    .daily-add-row { padding: 10px; font-size: 12px; }
-    .daily-retro-wrap { padding: 10px 12px; flex-wrap: wrap; gap: 6px; }
-    .daily-retro-label { font-size: 11px; }
-    .daily-retro-input { font-size: 12px; }
+  :root[data-device="mobile"] .daily-add-row { padding: 10px; font-size: 12px; }
+  :root[data-device="mobile"] .daily-retro-wrap { padding: 10px 12px; flex-wrap: wrap; gap: 6px; }
+  :root[data-device="mobile"] .daily-retro-label { font-size: 11px; }
+  :root[data-device="mobile"] .daily-retro-input { font-size: 12px; }
 
-    /* 힌트 · 모달 축소 */
-    .daily-hint { display: none; }
-    .modal { max-width: 92vw; padding: 16px; }
-    .modal-title { font-size: 1rem; }
-    .modal-message { font-size: 13px; }
-    .project-edit-modal { max-width: 92vw; padding: 16px; }
-
-    /* 레거시 레이아웃 클래스 (현재 daily.html에서 미사용 — 후속 board/history 호환용) */
-    .weekly-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-    .sidebar { border-right: 0; border-bottom: 1px solid var(--border); max-height: 320px; }
-    .history-days { grid-template-columns: 1fr; }
-    .week-summary-kpis { grid-template-columns: 1fr; }
-  }
-
-  /* 초소형 (≤480px · 폰 세로) — 더 타이트하게 */
-  @media (max-width: 480px) {
-    .daily-today-btn { font-size: 11px; padding: 0 8px; }
-    .daily-day-tab { font-size: 10px; padding: 3px 2px; }
-    .daily-summary b { display: inline; }
-    .daily-summary > span:nth-child(2) { display: none; } /* "진행h/예상h" 숨김 — 바만 표시 */
-    .daily-head { padding: 8px 10px; gap: 6px; }
-    .daily-date-big { font-size: 14px; }
-  }
+  :root[data-device="mobile"] .daily-hint { display: none; }
+  :root[data-device="mobile"] .modal { max-width: 92vw; padding: 16px; }
+  :root[data-device="mobile"] .modal-title { font-size: 1rem; }
+  :root[data-device="mobile"] .modal-message { font-size: 13px; }
+  :root[data-device="mobile"] .project-edit-modal { max-width: 92vw; padding: 16px; }
 
   /* Phase 7a: 상호작용 힌트 강화 (hover) */
   .task-row:not(.task-head) { transition: background 0.15s; }
@@ -1654,6 +1630,7 @@
         <button class="btn sm" onclick="exportJson()" title="JSON 백업"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"/></svg> 백업</button>
         <button class="btn sm" onclick="document.getElementById('importInput').click()" title="JSON 복원"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg> 복원</button>
         <input type="file" id="importInput" accept="application/json,.json" style="display:none" onchange="importJson(event, render)">
+        <button id="deviceToggle" class="theme-toggle" onclick="toggleDevice()" title="모바일 모드로">📱</button>
         <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="테마"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
       </div>
     </header>
@@ -4113,6 +4090,7 @@ const COL_DEFAULT = { project: 62, name: 200, target: 72, start: 92, end: 92, pr
     // 로드 직후 주간 자동 롤오버: 저장된 weekStart가 이번 주가 아니면 history로 보관 후 갱신
     autoRolloverWeek();
     initTheme();
+    initDevice();
     initModalBase();
     subscribeStateChanges(render);
 
