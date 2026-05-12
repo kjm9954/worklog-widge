@@ -1,7 +1,7 @@
 ﻿{
     "schema":  "work-retro-widget",
     "version":  1,
-    "exportedAt":  "2026-05-12T16:22:53.0800297Z",
+    "exportedAt":  "2026-05-12T16:36:14.5801903Z",
     "source":  {
                    "spreadsheetId":  "1el6_BLFOOWBuL-IXLXhYiIp6AQwqu-ll33TfU0P7T5w",
                    "sheets":  [
@@ -58,6 +58,18 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2025-09-11":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-09-14":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2025-09-15":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -94,6 +106,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2025-09-25":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2025-09-28":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -110,6 +128,42 @@
                                        "status":  "miss",
                                        "category":  "커뮤니케이션",
                                        "detail":  "문서의 기본 양식인 목표 누락",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-02":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-05":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-06":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-07":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-08":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-10-09":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2025-10-12":  {
@@ -166,6 +220,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2025-10-23":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2025-10-26":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -218,6 +278,12 @@
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2025-11-13":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2025-11-16":  {
@@ -274,6 +340,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2025-11-27":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2025-11-30":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -296,6 +368,12 @@
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2025-12-04":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2025-12-07":  {
@@ -352,6 +430,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2025-12-18":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2025-12-21":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -362,6 +446,18 @@
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2025-12-23":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2025-12-24":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2025-12-25":  {
@@ -400,6 +496,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-01-02":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2026-01-05":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -424,6 +526,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-01-09":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2026-01-12":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -446,6 +554,12 @@
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2026-01-16":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2026-01-19":  {
@@ -508,6 +622,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-02-02":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2026-02-03":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -544,10 +664,46 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-02-11":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "오전 반차",
+                                       "nextAction":  ""
+                                   },
                     "2026-02-12":  {
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2026-02-13":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-02-16":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-02-17":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-02-18":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-02-19":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "오전 반차",
                                        "nextAction":  ""
                                    },
                     "2026-02-20":  {
@@ -580,6 +736,24 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-02-27":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-03-02":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
+                    "2026-03-04":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "오전 반차",
+                                       "nextAction":  ""
+                                   },
                     "2026-03-05":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -610,6 +784,12 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-03-13":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
+                                       "nextAction":  ""
+                                   },
                     "2026-03-16":  {
                                        "status":  "ok",
                                        "category":  "",
@@ -622,10 +802,22 @@
                                        "detail":  "",
                                        "nextAction":  ""
                                    },
+                    "2026-03-19":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "오전 반차",
+                                       "nextAction":  ""
+                                   },
                     "2026-03-20":  {
                                        "status":  "miss",
                                        "category":  "맵",
                                        "detail":  "맵 생각없이 add 했다가 다이아 맵 안 불러와지는 이슈 발생 ▶ 커밋할 때 주의 필요",
+                                       "nextAction":  ""
+                                   },
+                    "2026-03-23":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "연차",
                                        "nextAction":  ""
                                    },
                     "2026-03-25":  {
@@ -638,6 +830,12 @@
                                        "status":  "ok",
                                        "category":  "",
                                        "detail":  "",
+                                       "nextAction":  ""
+                                   },
+                    "2026-03-27":  {
+                                       "status":  "skip",
+                                       "category":  "",
+                                       "detail":  "쉬는날",
                                        "nextAction":  ""
                                    },
                     "2026-03-30":  {

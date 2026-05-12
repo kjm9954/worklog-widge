@@ -1402,6 +1402,7 @@
 
     function normalizeRecords(source) {
       Object.values(source).forEach((record) => {
+        record.status = normalizeStatus(record.status);
         record.category = normalizeCategory(record.category);
         record.nextAction = record.nextAction || "";
       });
@@ -1479,6 +1480,7 @@
       const text = String(value || "").trim();
       if (["miss", "실수 있음", "실수", "O", "o", "있음"].includes(text)) return "miss";
       if (["ok", "실수 없음", "없음", "X", "x"].includes(text)) return "ok";
+      if (["skip", "체크 제외", "쉬는날", "연차", "오전 반차", "오후 반차", "반차", "휴가"].includes(text)) return "skip";
       return "";
     }
 
@@ -1742,6 +1744,7 @@
       if (!day) return { closed: true, reason: "빈 날짜" };
       if (day.dow === 0 || day.dow === 6) return { closed: true, reason: "주말" };
       if (isOffFriday(day.key, day.dow)) return { closed: true, reason: "놀금" };
+      if (records[day.key]?.status === "skip") return { closed: true, reason: records[day.key]?.detail || "체크 제외" };
       if (keyToUtc(day.key) > keyToUtc(todayKey())) return { closed: true, reason: "예정" };
       return { closed: false, reason: "" };
     }
@@ -1873,6 +1876,7 @@
     function statusLabel(status) {
       if (status === "ok") return "실수 없음";
       if (status === "miss") return "실수 있음";
+      if (status === "skip") return "체크 제외";
       return "미입력";
     }
 
