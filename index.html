@@ -192,6 +192,15 @@
     .page.active { display: block; }
     .page-stack { display: grid; gap: 10px; }
 
+    .check-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 210px;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .check-layout > .panel { min-width: 0; }
+
     .nav-card,
     .panel {
       border: 1px solid var(--border);
@@ -208,6 +217,46 @@
       flex-wrap: wrap;
       padding: 8px 12px;
     }
+
+    .check-sidebar {
+      position: sticky;
+      top: 58px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .check-sidebar .month-nav {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) 28px;
+      gap: 6px;
+      align-items: start;
+      width: 100%;
+    }
+
+    .check-sidebar .month-label {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+      font-size: 0.875rem;
+    }
+
+    .check-sidebar .month-label input { width: 100%; }
+
+    .check-sidebar .summary-chips {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .check-sidebar .chip {
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .check-sidebar .progress-chip { min-width: 0; }
 
     .month-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -973,7 +1022,8 @@
     @media (max-width: 980px) {
       .app-header { align-items: flex-start; flex-direction: column; }
       .header-actions { justify-content: flex-start; }
-      .two-col, .record-layout, .history-overview { grid-template-columns: 1fr; }
+      .check-layout, .two-col, .record-layout, .history-overview { grid-template-columns: 1fr; }
+      .check-sidebar { position: static; order: -1; }
     }
 
     @media (max-width: 620px) {
@@ -1008,8 +1058,22 @@
 
     <main class="main">
       <section class="page active" id="page-check">
-        <div class="page-stack">
-          <section class="nav-card" aria-label="월간 체크 요약">
+        <div class="check-layout">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">월간 체크 달력</h2>
+                <p class="panel-sub">실수 없음은 달력에서 바로 저장, 실수 있음은 추이 페이지로 이동해 상세를 남깁니다.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="calendar-wrap">
+                <div class="calendar" id="calendar" aria-label="월간 실수 체크 달력"></div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="nav-card check-sidebar" aria-label="월간 체크 요약">
             <div class="month-nav">
               <button class="icon-btn" id="prevMonth" type="button" aria-label="이전 달">&lt;</button>
               <label class="month-label">
@@ -1024,24 +1088,7 @@
               <div class="chip progress-chip"><span class="label">체크일</span><span class="value" id="checkedCount">0</span><span class="progress-track"><span class="progress-fill" id="checkProgress"></span></span></div>
               <div class="chip"><span class="label">최다 유형</span><span class="value" id="topCategory">-</span></div>
             </div>
-          </section>
-
-          <section class="two-col">
-            <article class="panel">
-              <div class="panel-head">
-                <div>
-                  <h2 class="panel-title">월간 체크 달력</h2>
-                  <p class="panel-sub">실수 없음은 달력에서 바로 저장, 실수 있음은 추이 페이지로 이동해 상세를 남깁니다.</p>
-                </div>
-              </div>
-              <div class="panel-body">
-                <div class="calendar-wrap">
-                  <div class="calendar" id="calendar" aria-label="월간 실수 체크 달력"></div>
-                </div>
-              </div>
-            </article>
-
-          </section>
+          </aside>
         </div>
       </section>
 
