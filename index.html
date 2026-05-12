@@ -228,21 +228,94 @@
     }
 
     .check-sidebar .month-nav {
-      display: grid;
-      grid-template-columns: 28px minmax(0, 1fr) 28px;
-      gap: 6px;
-      align-items: start;
+      position: relative;
+      display: block;
       width: 100%;
     }
 
-    .check-sidebar .month-label {
-      display: grid;
-      gap: 5px;
-      min-width: 0;
-      font-size: 0.875rem;
+    .month-popover-button {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text);
+      padding: 6px 9px;
+      text-align: left;
+      font-weight: 900;
     }
 
-    .check-sidebar .month-label input { width: 100%; }
+    .month-popover-button:hover { background: var(--bg-2); border-color: var(--border-strong); }
+
+    .month-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 30;
+      width: 248px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow-md);
+      padding: 12px;
+    }
+
+    .month-popover[hidden] { display: none; }
+
+    .month-popover-head {
+      display: grid;
+      grid-template-columns: 28px 1fr 28px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .month-popover-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .month-popover-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .month-popover-weekday,
+    .month-popover-day {
+      display: grid;
+      place-items: center;
+      min-height: 25px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 800;
+    }
+
+    .month-popover-weekday {
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-weight: 900;
+    }
+
+    .month-popover-weekday.sun,
+    .month-popover-day.sun { color: var(--red); }
+
+    .month-popover-weekday.sat,
+    .month-popover-day.sat { color: var(--blue); }
+
+    .month-popover-day {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      padding: 0;
+    }
+
+    .month-popover-day:hover { background: var(--bg-2); }
+    .month-popover-day.selected { background: var(--blue); color: #fff; }
+    .month-popover-day.today { border-color: var(--blue); color: var(--blue); background: var(--card); }
+    .month-popover-day.selected.today { color: #fff; }
+    .month-popover-empty { min-height: 25px; }
 
     .check-sidebar .summary-chips {
       display: grid;
@@ -464,14 +537,14 @@
     }
 
     .day {
-      min-height: 78px;
+      min-height: 112px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
-      padding: 6px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 7px;
       transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, opacity 0.15s, transform 0.15s;
     }
 
@@ -481,8 +554,8 @@
       box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }
-    .day.outside { min-height: 58px; background: var(--bg-2); opacity: 0.45; }
-    .day.weekend, .day.no-check, .day.future { min-height: 58px; background: #fafafa; opacity: 0.52; }
+    .day.outside { min-height: 112px; background: var(--bg-2); opacity: 0.45; }
+    .day.weekend, .day.no-check, .day.future { min-height: 112px; background: #fafafa; opacity: 0.52; }
     .day.weekend:hover, .day.no-check:hover, .day.future:hover {
       background: #fafafa;
       border-color: var(--border);
@@ -508,10 +581,10 @@
 
     .day-foot { justify-content: flex-start; }
 
-    .day-num { font-size: 0.75rem; font-weight: 900; }
+    .day-num { font-size: 0.8125rem; font-weight: 900; }
     .day.today .day-num {
       color: #8a5a00;
-      font-size: 0.95rem;
+      font-size: 1.12rem;
       line-height: 1;
     }
 
@@ -529,13 +602,13 @@
     .quick-check { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
     .quick-btn {
-      min-height: 24px;
+      min-height: 30px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--bg-2);
       color: var(--text-muted);
       padding: 0 6px;
-      font-size: 0.6875rem;
+      font-size: 0.75rem;
       font-weight: 900;
     }
 
@@ -554,10 +627,10 @@
       width: fit-content;
       max-width: 100%;
       border-radius: 999px;
-      padding: 1px 7px;
+      padding: 2px 8px;
       background: var(--gray-bg);
       color: var(--text-muted);
-      font-size: 0.625rem;
+      font-size: 0.6875rem;
       font-weight: 900;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1075,12 +1148,18 @@
 
           <aside class="nav-card check-sidebar" aria-label="월간 체크 요약">
             <div class="month-nav">
-              <button class="icon-btn" id="prevMonth" type="button" aria-label="이전 달">&lt;</button>
-              <label class="month-label">
+              <button class="month-popover-button" id="monthPickerButton" type="button" aria-expanded="false" aria-controls="monthPopover">
                 <span id="monthTitle">2026년 5월</span>
-                <input id="monthInput" type="month" value="2026-05">
-              </label>
-              <button class="icon-btn" id="nextMonth" type="button" aria-label="다음 달">&gt;</button>
+              </button>
+              <input id="monthInput" type="month" value="2026-05" hidden>
+              <div class="month-popover" id="monthPopover" hidden>
+                <div class="month-popover-head">
+                  <button class="icon-btn" id="prevMonth" type="button" aria-label="이전 달">&lt;</button>
+                  <div class="month-popover-title" id="monthPopoverTitle">2026년 5월</div>
+                  <button class="icon-btn" id="nextMonth" type="button" aria-label="다음 달">&gt;</button>
+                </div>
+                <div class="month-popover-grid" id="monthPopoverGrid" aria-label="월 선택 달력"></div>
+              </div>
             </div>
             <div class="summary-chips">
               <div class="chip warn"><span class="label">실수</span><span class="value" id="missCount">0</span></div>
@@ -1267,6 +1346,7 @@
     let historyColumns = loadHistoryColumns();
     let selectedDate = "2026-05-12";
     let savedNoticeKey = "";
+    let monthPopoverOpen = false;
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -1411,6 +1491,48 @@
       }
       while (days.length % 7 !== 0) days.push(null);
       return days;
+    }
+
+    function closeMonthPopover() {
+      monthPopoverOpen = false;
+      $("#monthPopover").hidden = true;
+      $("#monthPickerButton").setAttribute("aria-expanded", "false");
+    }
+
+    function openMonthPopover() {
+      monthPopoverOpen = true;
+      renderMonthPopover();
+      $("#monthPopover").hidden = false;
+      $("#monthPickerButton").setAttribute("aria-expanded", "true");
+    }
+
+    function toggleMonthPopover() {
+      if (monthPopoverOpen) closeMonthPopover();
+      else openMonthPopover();
+    }
+
+    function renderMonthPopover() {
+      const monthValue = $("#monthInput").value;
+      const today = todayKey();
+      $("#monthPopoverTitle").textContent = monthTitle(monthValue);
+
+      const chunks = ["일", "월", "화", "수", "목", "금", "토"].map((day, index) => {
+        const tone = index === 0 ? "sun" : index === 6 ? "sat" : "";
+        return `<span class="month-popover-weekday ${tone}">${day}</span>`;
+      });
+
+      monthDays(monthValue).forEach((day) => {
+        if (!day) {
+          chunks.push(`<span class="month-popover-empty"></span>`);
+          return;
+        }
+        const tone = day.dow === 0 ? "sun" : day.dow === 6 ? "sat" : "";
+        const selected = day.key === selectedDate ? "selected" : "";
+        const isToday = day.key === today ? "today" : "";
+        chunks.push(`<button class="month-popover-day ${tone} ${selected} ${isToday}" data-date="${day.key}" type="button">${day.day}</button>`);
+      });
+
+      $("#monthPopoverGrid").innerHTML = chunks.join("");
     }
 
     function isOffFriday(key, dow) {
@@ -1587,6 +1709,7 @@
       const [year, month] = monthValue.split("-").map(Number);
       selectedDate = dateKey(year, month, 1);
       renderAll();
+      if (monthPopoverOpen) renderMonthPopover();
     }
 
     function markStatus(key, status) {
@@ -1671,6 +1794,7 @@
       $("#checkedCount").textContent = `${stats.checked}/${stats.required}`;
       $("#checkProgress").style.width = `${stats.required ? Math.round((stats.checked / stats.required) * 100) : 0}%`;
       $("#topCategory").textContent = stats.top;
+      if (monthPopoverOpen) renderMonthPopover();
     }
 
     function olderDateToKey(value) {
@@ -2044,6 +2168,23 @@
     $("#monthInput").addEventListener("change", () => setMonth($("#monthInput").value));
     $("#prevMonth").addEventListener("click", () => setMonth(addMonths($("#monthInput").value, -1)));
     $("#nextMonth").addEventListener("click", () => setMonth(addMonths($("#monthInput").value, 1)));
+    $("#monthPickerButton").addEventListener("click", toggleMonthPopover);
+    $("#monthPopoverGrid").addEventListener("click", (event) => {
+      const button = event.target.closest(".month-popover-day");
+      if (!button) return;
+      selectedDate = button.dataset.date;
+      $("#monthInput").value = selectedDate.slice(0, 7);
+      closeMonthPopover();
+      renderAll();
+    });
+    document.addEventListener("click", (event) => {
+      if (!monthPopoverOpen) return;
+      if (event.target.closest(".month-nav")) return;
+      closeMonthPopover();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && monthPopoverOpen) closeMonthPopover();
+    });
     $("#backToCheck").addEventListener("click", () => setPage("check"));
 
     $("#catButtons").addEventListener("click", (event) => {
