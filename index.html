@@ -69,10 +69,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
+      gap: 10px;
+      padding: 8px 14px;
       background: var(--card);
       border-bottom: 1px solid var(--border);
+    }
+
+    .app-header > div:first-child {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
     }
 
     h1 {
@@ -95,7 +102,7 @@
       display: flex;
       width: fit-content;
       gap: 2px;
-      margin-top: 10px;
+      margin-top: 0;
       padding: 0;
       border-bottom: 1px solid var(--border);
       background: transparent;
@@ -103,13 +110,13 @@
 
     .page-tab {
       position: relative;
-      min-height: 34px;
+      min-height: 30px;
       border: 0;
       border-radius: var(--radius-sm) var(--radius-sm) 0 0;
       background: transparent;
       color: var(--text-muted);
-      padding: 6px 18px;
-      font-size: 0.875rem;
+      padding: 4px 16px;
+      font-size: 0.8125rem;
       font-weight: 800;
       white-space: nowrap;
     }
@@ -147,7 +154,7 @@
     .sync-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 28px;
+      min-height: 26px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--card);
@@ -159,7 +166,7 @@
     }
 
     .btn {
-      min-height: 30px;
+      min-height: 28px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--card);
@@ -178,12 +185,12 @@
     .main {
       width: min(1280px, calc(100vw - 24px));
       margin: 0 auto;
-      padding: 14px 0 28px;
+      padding: 10px 0 18px;
     }
 
     .page { display: none; }
     .page.active { display: block; }
-    .page-stack { display: grid; gap: 12px; }
+    .page-stack { display: grid; gap: 10px; }
 
     .nav-card,
     .panel {
@@ -197,16 +204,16 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
-      padding: 10px 14px;
+      padding: 8px 12px;
     }
 
     .month-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .icon-btn {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
@@ -238,7 +245,7 @@
       outline: none;
     }
 
-    .month-label input { width: 130px; min-height: 30px; padding: 4px 8px; }
+    .month-label input { width: 124px; min-height: 28px; padding: 3px 8px; }
 
     .month-label input:focus,
     .field input:focus,
@@ -381,26 +388,26 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      padding: 11px 14px;
+      padding: 8px 12px;
       border-bottom: 1px solid var(--border);
       background: var(--bg-2);
     }
 
     .panel-title { margin: 0; font-size: 0.9375rem; font-weight: 900; }
     .panel-sub { margin: 2px 0 0; color: var(--text-muted); font-size: 0.75rem; }
-    .panel-body { padding: 12px 14px; }
+    .panel-body { padding: 10px 12px; }
 
-    .calendar-wrap { overflow-x: auto; padding-bottom: 4px; }
+    .calendar-wrap { overflow-x: auto; padding-bottom: 2px; }
 
     .calendar {
       display: grid;
-      grid-template-columns: repeat(7, minmax(112px, 1fr));
-      gap: 6px;
-      min-width: 820px;
+      grid-template-columns: repeat(7, minmax(104px, 1fr));
+      gap: 4px;
+      min-width: 760px;
     }
 
     .weekday {
-      padding: 3px 0 6px;
+      padding: 1px 0 4px;
       color: var(--text-muted);
       font-size: 0.6875rem;
       font-weight: 900;
@@ -408,14 +415,14 @@
     }
 
     .day {
-      min-height: 112px;
+      min-height: 78px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
-      padding: 8px;
+      padding: 6px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 5px;
       transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, opacity 0.15s, transform 0.15s;
     }
 
@@ -425,8 +432,8 @@
       box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }
-    .day.outside { background: var(--bg-2); opacity: 0.45; }
-    .day.weekend, .day.no-check, .day.future { background: #fafafa; opacity: 0.52; }
+    .day.outside { min-height: 58px; background: var(--bg-2); opacity: 0.45; }
+    .day.weekend, .day.no-check, .day.future { min-height: 58px; background: #fafafa; opacity: 0.52; }
     .day.weekend:hover, .day.no-check:hover, .day.future:hover {
       background: #fafafa;
       border-color: var(--border);
@@ -452,10 +459,10 @@
 
     .day-foot { justify-content: flex-start; }
 
-    .day-num { font-size: 0.8125rem; font-weight: 900; }
+    .day-num { font-size: 0.75rem; font-weight: 900; }
     .day.today .day-num {
       color: #8a5a00;
-      font-size: 1.12rem;
+      font-size: 0.95rem;
       line-height: 1;
     }
 
@@ -473,13 +480,13 @@
     .quick-check { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
     .quick-btn {
-      min-height: 30px;
+      min-height: 24px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--bg-2);
       color: var(--text-muted);
       padding: 0 6px;
-      font-size: 0.75rem;
+      font-size: 0.6875rem;
       font-weight: 900;
     }
 
@@ -498,10 +505,10 @@
       width: fit-content;
       max-width: 100%;
       border-radius: 999px;
-      padding: 2px 8px;
+      padding: 1px 7px;
       background: var(--gray-bg);
       color: var(--text-muted);
-      font-size: 0.6875rem;
+      font-size: 0.625rem;
       font-weight: 900;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -889,8 +896,16 @@
     .history-table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
       font-size: 0.8125rem;
+      --history-detail-col: 50%;
+      --history-action-col: 30%;
     }
+
+    .history-col-date { width: 8%; }
+    .history-col-type { width: 12%; }
+    .history-col-detail { width: var(--history-detail-col); }
+    .history-col-action { width: var(--history-action-col); }
 
     .history-table th,
     .history-table td {
@@ -901,17 +916,50 @@
     }
 
     .history-table th {
+      position: relative;
       color: var(--text-muted);
       font-size: 0.6875rem;
       font-weight: 900;
+      user-select: none;
     }
 
     .history-table tr:last-child td { border-bottom: 0; }
     .history-table tbody tr:hover { background: var(--bg-2); }
-    .history-table .date { width: 96px; color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .history-table th:nth-child(4),
-    .history-table td:nth-child(4) { width: 28%; }
+    .history-table td { overflow-wrap: anywhere; }
+    .history-table .date { color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .history-table .category-chip { font-size: 0.625rem; padding: 1px 7px; }
+
+    .history-resize-handle {
+      position: absolute;
+      top: 0;
+      right: -4px;
+      bottom: 0;
+      width: 8px;
+      cursor: col-resize;
+      z-index: 1;
+    }
+
+    .history-resize-handle::after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      bottom: 7px;
+      left: 3px;
+      width: 2px;
+      border-radius: 999px;
+      background: transparent;
+    }
+
+    .history-resize-handle:hover::after,
+    .history-table.resizing .history-resize-handle::after {
+      background: var(--border-strong);
+    }
+
+    .history-table.resizing,
+    .history-table.resizing * {
+      cursor: col-resize;
+      user-select: none;
+    }
 
     .empty {
       padding: 18px;
@@ -1115,12 +1163,18 @@
               </div>
               <div class="filter-chips" id="historyFilter">
               </div>
-              <table class="history-table" aria-label="지난 실수 상세 히스토리">
+              <table class="history-table" id="historyTable" aria-label="지난 실수 상세 히스토리">
+                <colgroup>
+                  <col class="history-col-date">
+                  <col class="history-col-type">
+                  <col class="history-col-detail">
+                  <col class="history-col-action">
+                </colgroup>
                 <thead>
                   <tr>
                     <th>날짜</th>
                     <th>유형</th>
-                    <th>상세 내용</th>
+                    <th>상세 내용 <span class="history-resize-handle" id="historyDetailResize" aria-hidden="true"></span></th>
                     <th>개선 사항</th>
                   </tr>
                 </thead>
@@ -1136,6 +1190,7 @@
   <script>
     const storeKey = "retro-calendar-widget-v6";
     const categoryStoreKey = "retro-calendar-widget-categories-v1";
+    const historyColumnStoreKey = "retro-calendar-widget-history-columns-v1";
     const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const offFridayBase = "2026-05-22";
     let activeHistoryFilter = "";
@@ -1162,6 +1217,7 @@
 
     let records = loadRecords();
     let managedCategories = loadCategories();
+    let historyColumns = loadHistoryColumns();
     let selectedDate = "2026-05-12";
     let savedNoticeKey = "";
 
@@ -1213,6 +1269,34 @@
 
     function saveCategories() {
       localStorage.setItem(categoryStoreKey, JSON.stringify(managedCategories));
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function loadHistoryColumns() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(historyColumnStoreKey) || "null");
+        if (!stored || typeof stored !== "object") throw new Error("empty");
+        const detail = Number(stored.detail);
+        const action = Number(stored.action);
+        if (!Number.isFinite(detail) || !Number.isFinite(action)) throw new Error("invalid");
+        return { detail: clamp(detail, 26, 56), action: clamp(action, 18, 46) };
+      } catch {
+        return { detail: 50, action: 30 };
+      }
+    }
+
+    function saveHistoryColumns() {
+      localStorage.setItem(historyColumnStoreKey, JSON.stringify(historyColumns));
+    }
+
+    function applyHistoryColumns() {
+      const table = $("#historyTable");
+      if (!table) return;
+      table.style.setProperty("--history-detail-col", `${historyColumns.detail}%`);
+      table.style.setProperty("--history-action-col", `${historyColumns.action}%`);
     }
 
     function saveRecords() {
@@ -1898,6 +1982,7 @@
     }
 
     function renderAll() {
+      applyHistoryColumns();
       renderSummary();
       renderCalendar();
       renderRecordPage();
@@ -1982,6 +2067,38 @@
         renderHistoryFilters();
         renderHistory();
       }
+    });
+
+    $("#historyDetailResize").addEventListener("pointerdown", (event) => {
+      const table = $("#historyTable");
+      const handle = event.currentTarget;
+      event.preventDefault();
+      table.classList.add("resizing");
+      handle.setPointerCapture(event.pointerId);
+
+      const resize = (moveEvent) => {
+        const rect = table.getBoundingClientRect();
+        const fixedPercent = 20;
+        const minDetail = 26;
+        const minAction = 18;
+        const pointerPercent = ((moveEvent.clientX - rect.left) / rect.width) * 100;
+        const detail = clamp(pointerPercent - fixedPercent, minDetail, 100 - fixedPercent - minAction);
+        historyColumns = {
+          detail,
+          action: 100 - fixedPercent - detail
+        };
+        applyHistoryColumns();
+      };
+
+      const stop = () => {
+        table.classList.remove("resizing");
+        saveHistoryColumns();
+        handle.removeEventListener("pointermove", resize);
+      };
+
+      handle.addEventListener("pointermove", resize);
+      handle.addEventListener("pointerup", stop, { once: true });
+      handle.addEventListener("pointercancel", stop, { once: true });
     });
 
     renderAll();
