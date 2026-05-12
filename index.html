@@ -435,36 +435,37 @@
     }
 
     .history-grid { display: grid; gap: 12px; }
+    #page-history .history-grid { gap: 10px; }
     .history-overview {
       display: grid;
       grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.9fr);
-      gap: 12px;
+      gap: 10px;
       align-items: stretch;
     }
 
     .history-left {
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
-      gap: 12px;
+      gap: 10px;
       height: 100%;
     }
 
     .history-insights {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
     }
 
     .insight-card {
       display: grid;
       align-content: start;
-      gap: 6px;
-      min-height: 118px;
+      gap: 4px;
+      min-height: 92px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--card);
       box-shadow: var(--shadow-sm);
-      padding: 13px 14px;
+      padding: 10px 12px;
     }
 
     .insight-label {
@@ -475,13 +476,13 @@
 
     .insight-card strong {
       color: var(--text);
-      font-size: 1.95rem;
+      font-size: 1.6rem;
       line-height: 1.1;
       font-weight: 950;
       font-variant-numeric: tabular-nums;
     }
 
-    .insight-card p { margin: 0; color: var(--text-muted); font-size: 0.8125rem; }
+    .insight-card p { margin: 0; color: var(--text-muted); font-size: 0.75rem; }
     .insight-card.good strong { color: var(--blue); }
     .insight-card.warn strong { color: var(--red); }
     .history-left > .panel,
@@ -883,7 +884,7 @@
 
     .history-detail { color: var(--text); }
     .history-action {
-      margin-top: 3px;
+      margin-top: 0;
       color: var(--text-muted);
       font-size: 0.75rem;
       font-weight: 700;
@@ -892,6 +893,9 @@
     .trend-bars,
     .month-list { display: grid; gap: 10px; }
 
+    #page-history .trend-bars,
+    #page-history .month-list { gap: 6px; }
+
     .trend-row {
       display: grid;
       grid-template-columns: 72px 1fr 54px 46px;
@@ -899,7 +903,7 @@
       gap: 10px;
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
-      padding: 6px;
+      padding: 5px 6px;
       font-size: 0.8125rem;
       font-variant-numeric: tabular-nums;
     }
@@ -917,7 +921,7 @@
     }
 
     .stack {
-      height: 24px;
+      height: 18px;
       border-radius: var(--radius-sm);
       background: var(--gray-bg);
       overflow: hidden;
@@ -930,11 +934,11 @@
 
     .month-card {
       display: grid;
-      gap: 8px;
+      gap: 5px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
-      padding: 12px;
+      padding: 9px 10px;
     }
 
     .month-card-head {
@@ -945,7 +949,7 @@
       font-weight: 900;
     }
 
-    .month-title { font-size: 1rem; }
+    .month-title { font-size: 0.9375rem; }
     .month-categories {
       display: flex;
       justify-content: flex-end;
@@ -954,12 +958,12 @@
       max-width: 70%;
     }
 
-    .month-card p { margin: 0; color: var(--text-muted); font-size: 0.8125rem; }
+    .month-card p { margin: 0; color: var(--text-muted); font-size: 0.75rem; }
 
     .month-card-stats {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       color: var(--text-muted);
       font-size: 0.75rem;
       font-weight: 800;
@@ -978,23 +982,23 @@
       display: grid;
       grid-template-columns: minmax(180px, 1fr);
       gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .filter-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 5px;
+      margin-bottom: 8px;
     }
 
     .filter-chip {
-      min-height: 28px;
+      min-height: 24px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text-muted);
-      padding: 3px 9px;
-      font-size: 0.75rem;
+      padding: 2px 8px;
+      font-size: 0.6875rem;
     }
 
     .filter-chip[data-cat="맵"] { background: var(--green-bg); color: var(--green-fg); }
@@ -1015,6 +1019,10 @@
     .filter-chip.active[data-cat="프렌즈"] { background: var(--peach-bg); color: var(--peach-fg); }
     .filter-chip.active[data-cat="커뮤니케이션"] { background: var(--sky-bg); color: var(--sky-fg); }
 
+    #page-history .panel-head { padding: 7px 12px; }
+    #page-history .panel-body { padding: 9px 12px; }
+    #page-history .panel-sub { margin-top: 1px; font-size: 0.6875rem; }
+
     .history-table {
       width: 100%;
       border-collapse: collapse;
@@ -1032,7 +1040,7 @@
     .history-table th,
     .history-table td {
       border-bottom: 1px solid var(--border);
-      padding: 9px 8px;
+      padding: 6px 8px;
       text-align: left;
       vertical-align: top;
     }
