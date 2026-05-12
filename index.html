@@ -1132,6 +1132,9 @@
       </div>
       <div class="header-actions">
         <span class="sync-badge" id="saveState">로컬 저장됨</span>
+        <button class="btn" id="exportJson" type="button">JSON 추출</button>
+        <button class="btn" id="importJson" type="button">JSON 불러오기</button>
+        <input id="jsonImportInput" type="file" accept="application/json,.json" hidden>
         <button class="btn" id="resetDemo" type="button">예시 초기화</button>
         <button class="btn primary" id="todayButton" type="button">오늘 체크</button>
       </div>
@@ -1343,11 +1346,7 @@
       "2026-03-20": { status: "miss", category: "", detail: "맵 추가 후 다이아 맵 로딩 이슈 발생. 커밋 전 확인 필요." }
     };
 
-    const olderHistory = [
-      { date: "26/02/23", category: "", detail: "플랫폼 이슈 히스토리 확인에 시간이 오래 걸림." },
-      { date: "26/01/06", category: "", detail: "텍스트 수정 시 기존 히스토리 체크 누락." },
-      { date: "25/12/02", category: "", detail: "프레임 X값 데이터 미수정." }
-    ];
+    const olderHistory = [];
 
     let records = loadRecords();
     let managedCategories = loadCategories();
@@ -1355,6 +1354,7 @@
     let selectedDate = "2026-05-12";
     let savedNoticeKey = "";
     let monthPopoverOpen = false;
+    let saveStateTimer = null;
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -1434,13 +1434,196 @@
       table.style.setProperty("--history-action-col", `${historyColumns.action}%`);
     }
 
+    function setSaveState(message, resetMessage = "로컬 저장됨") {
+      const target = $("#saveState");
+      target.textContent = message;
+      if (saveStateTimer) window.clearTimeout(saveStateTimer);
+      saveStateTimer = window.setTimeout(() => {
+        target.textContent = resetMessage;
+        saveStateTimer = null;
+      }, 900);
+    }
+
     function saveRecords() {
       normalizeRecords(records);
       localStorage.setItem(storeKey, JSON.stringify(records));
-      $("#saveState").textContent = "저장됨";
-      window.setTimeout(() => {
-        $("#saveState").textContent = "로컬 저장됨";
-      }, 700);
+      setSaveState("저장됨");
+    }
+
+    function normalizeDateKey(value) {
+      const text = String(value || "").trim();
+      const ymd = text.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})$/);
+      if (ymd) return dateKey(Number(ymd[1]), Number(ymd[2]), Number(ymd[3]));
+
+      const shortYmd = text.match(/^(\d{2})\/(\d{1,2})\/(\d{1,2})$/);
+      if (shortYmd) return dateKey(2000 + Number(shortYmd[1]), Number(shortYmd[2]), Number(shortYmd[3]));
+
+      const md = text.match(/^(\d{1,2})\/(\d{1,2})$/);
+      if (md) {
+        const baseYear = Number(($("#monthInput")?.value || todayKey()).slice(0, 4));
+        const month = Number(md[1]);
+        const year = month >= 9 && baseYear >= 2026 ? baseYear - 1 : baseYear;
+        return dateKey(year, month, Number(md[2]));
+      }
+
+      return "";
+    }
+
+    function normalizeStatus(value) {
+      const text = String(value || "").trim();
+      if (["miss", "실수 있음", "실수", "O", "o", "있음"].includes(text)) return "miss";
+      if (["ok", "실수 없음", "없음", "X", "x"].includes(text)) return "ok";
+      return "";
+    }
+
+    function combineText(current, next) {
+      const lines = [current, next]
+        .flatMap((value) => String(value || "").split(/\r?\n/))
+        .map((line) => line.trim())
+        .filter(Boolean);
+      return Array.from(new Set(lines)).join("\n");
+    }
+
+    function mergeRecord(target, key, incoming) {
+      const current = target[key] || { status: "", category: "", detail: "", nextAction: "" };
+      const categories = [current.category, incoming.category]
+        .flatMap(splitCategories)
+        .filter(Boolean);
+      target[key] = {
+        status: current.status === "miss" || incoming.status === "miss" ? "miss" : current.status || incoming.status || "",
+        category: Array.from(new Set(categories)).join(", "),
+        detail: combineText(current.detail, incoming.detail),
+        nextAction: combineText(current.nextAction, incoming.nextAction)
+      };
+    }
+
+    function rowValue(row, keys) {
+      const lowerMap = Object.fromEntries(Object.entries(row).map(([key, value]) => [key.toLowerCase(), value]));
+      for (const key of keys) {
+        if (Object.prototype.hasOwnProperty.call(row, key)) return row[key];
+        const lowerKey = key.toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(lowerMap, lowerKey)) return lowerMap[lowerKey];
+      }
+      return "";
+    }
+
+    function recordMapFromArray(rows) {
+      const nextRecords = {};
+      rows.forEach((row) => {
+        if (!row || typeof row !== "object") return;
+        const key = normalizeDateKey(rowValue(row, ["date", "날짜", "key"]));
+        if (!key) return;
+        const incoming = {
+          status: normalizeStatus(rowValue(row, ["status", "상태", "체크"])) || "miss",
+          category: normalizeCategory(String(rowValue(row, ["category", "카테고리", "유형", "구분"]) || "").trim()),
+          detail: String(rowValue(row, ["detail", "상세 내용", "상세내용", "내용"]) || "").trim(),
+          nextAction: String(rowValue(row, ["nextAction", "next_action", "개선 사항", "개선사항", "다음 액션", "다음엔 뭘 확인할까"]) || "").trim()
+        };
+        mergeRecord(nextRecords, key, incoming);
+      });
+      return nextRecords;
+    }
+
+    function normalizeRecordMap(source) {
+      if (Array.isArray(source)) return recordMapFromArray(source);
+      if (!source || typeof source !== "object") throw new Error("records가 비어 있습니다.");
+
+      const nextRecords = {};
+      Object.entries(source).forEach(([date, record]) => {
+        const key = normalizeDateKey(date);
+        if (!key || !record || typeof record !== "object") return;
+        const incoming = {
+          status: normalizeStatus(record.status),
+          category: normalizeCategory(String(record.category || "").trim()),
+          detail: String(record.detail || "").trim(),
+          nextAction: String(record.nextAction || record.next_action || "").trim()
+        };
+        mergeRecord(nextRecords, key, incoming);
+      });
+      return normalizeRecords(nextRecords);
+    }
+
+    function splitCategories(value) {
+      return String(value || "")
+        .split(/[,/·\n]+/)
+        .map((category) => normalizeCategory(category.trim()))
+        .filter(Boolean);
+    }
+
+    function categoriesFromRecordMap(source) {
+      const seen = new Set();
+      Object.values(source).forEach((record) => {
+        splitCategories(record.category).forEach((category) => seen.add(category));
+      });
+      return Array.from(seen);
+    }
+
+    function exportPayload() {
+      return {
+        schema: "work-retro-widget",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        selectedDate,
+        month: $("#monthInput").value,
+        categories: [...managedCategories],
+        historyColumns: { ...historyColumns },
+        records: normalizeRecords(JSON.parse(JSON.stringify(records)))
+      };
+    }
+
+    function downloadJson() {
+      const payload = exportPayload();
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `work-retro-${todayKey()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+      setSaveState("JSON 추출됨");
+    }
+
+    function applyImportedJson(payload) {
+      const nextRecords = normalizeRecordMap(payload.records || payload);
+      const payloadCategories = Array.isArray(payload.categories) ? payload.categories : [];
+      const seen = new Set();
+      managedCategories = [...payloadCategories, ...categoriesFromRecordMap(nextRecords)]
+        .map((category) => normalizeCategory(String(category || "").trim()))
+        .filter((category) => {
+          if (!category || seen.has(category)) return false;
+          seen.add(category);
+          return true;
+        });
+
+      records = nextRecords;
+      historyColumns = payload.historyColumns && typeof payload.historyColumns === "object"
+        ? {
+            detail: clamp(Number(payload.historyColumns.detail) || historyColumns.detail, 26, 56),
+            action: clamp(Number(payload.historyColumns.action) || historyColumns.action, 18, 46)
+          }
+        : historyColumns;
+      selectedDate = normalizeDateKey(payload.selectedDate) || Object.keys(records).sort().pop() || todayKey();
+      $("#monthInput").value = payload.month || selectedDate.slice(0, 7);
+      activeHistoryFilter = "";
+      savedNoticeKey = "";
+      localStorage.setItem(storeKey, JSON.stringify(records));
+      saveCategories();
+      saveHistoryColumns();
+      renderAll();
+      setSaveState("JSON 반영됨");
+    }
+
+    async function importJsonFromFile(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        applyImportedJson(JSON.parse(await file.text()));
+      } catch (error) {
+        window.alert(`JSON을 불러오지 못했습니다.\n${error.message}`);
+      } finally {
+        event.target.value = "";
+      }
     }
 
     function pad(value) {
@@ -1678,7 +1861,7 @@
     }
 
     function legacyCategoryMatch(rowCategory, filterCategory) {
-      return normalizeCategory(rowCategory) === normalizeCategory(filterCategory);
+      return splitCategories(rowCategory).includes(normalizeCategory(filterCategory));
     }
 
     function statusLabel(status) {
@@ -1695,8 +1878,9 @@
       const ok = checked.filter((day) => recordFor(day.key).status === "ok");
       const categoryCounts = {};
       miss.forEach((day) => {
-        const category = normalizeCategory(recordFor(day.key).category);
-        if (category) categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        splitCategories(recordFor(day.key).category).forEach((category) => {
+          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        });
       });
       const categories = Object.entries(categoryCounts)
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
@@ -1773,7 +1957,7 @@
                 <button class="quick-btn miss ${record.status === "miss" ? "active" : ""}" data-status="miss" data-date="${day.key}" type="button">있음</button>
               </div>
               <div class="day-foot">
-                <span class="category-chip ${categoryClass(record.category)}">${category}</span>
+                <span class="category-chip ${categoryClass(record.category)}">${escapeHtml(category)}</span>
               </div>
             `}
           </div>
@@ -1921,23 +2105,23 @@
       const keyword = topKeyword(allRows);
 
       summary.innerHTML = `
-        <strong>${normalizedCategory} 패턴</strong>
+        <strong>${escapeHtml(normalizedCategory)} 패턴</strong>
         <div class="similar-summary-tags">
           <span>전체 ${allRows.length}건</span>
           <span>최근 30일 ${recentCount}건</span>
-          <span>마지막 ${lastDate}</span>
-          <span>키워드 ${keyword}</span>
+          <span>마지막 ${escapeHtml(lastDate)}</span>
+          <span>키워드 ${escapeHtml(keyword)}</span>
         </div>
       `;
 
       container.innerHTML = rows.length ? rows.map((row) => `
         <article class="similar-item">
           <div class="similar-meta">
-            <strong>${row.date}</strong>
+            <strong>${escapeHtml(row.date)}</strong>
             <span class="similar-badge">이번 기록과 비슷함</span>
           </div>
-          <p>${oneLine(row.detail)}</p>
-          ${row.nextAction ? `<small>다음 확인: ${oneLine(row.nextAction)}</small>` : ""}
+          <p>${escapeHtml(oneLine(row.detail))}</p>
+          ${row.nextAction ? `<small>다음 확인: ${escapeHtml(oneLine(row.nextAction))}</small>` : ""}
         </article>
       `).join("") : `<div class="similar-empty">최근 같은 카테고리 실수가 없습니다. 이번 기록이 첫 기준점이 됩니다.</div>`;
     }
@@ -1980,13 +2164,13 @@
       const current = $("#monthInput").value;
       const currentStats = statsForMonth(current);
       const prevMonth = addMonths(current, -1);
+      const prevStats = statsForMonth(prevMonth);
       const prevPrevMonth = addMonths(current, -2);
-      const prevCategories = categoriesForMonth(prevMonth);
-      const prevPrevCategories = categoriesForMonth(prevPrevMonth);
+      const prevPrevStats = statsForMonth(prevPrevMonth);
       return [
         { month: current, label: monthShort(current), miss: currentStats.miss, ok: currentStats.ok, top: currentStats.top, categories: currentStats.categories },
-        { month: prevMonth, label: monthShort(prevMonth), miss: 2, ok: 17, top: prevCategories[0] || "-", categories: prevCategories },
-        { month: prevPrevMonth, label: monthShort(prevPrevMonth), miss: 2, ok: 18, top: prevPrevCategories[0] || "-", categories: prevPrevCategories }
+        { month: prevMonth, label: monthShort(prevMonth), miss: prevStats.miss, ok: prevStats.ok, top: prevStats.top, categories: prevStats.categories },
+        { month: prevPrevMonth, label: monthShort(prevPrevMonth), miss: prevPrevStats.miss, ok: prevPrevStats.ok, top: prevPrevStats.top, categories: prevPrevStats.categories }
       ];
     }
 
@@ -2090,7 +2274,7 @@
               <span class="month-title">${row.label}</span>
               <div class="month-categories">
                 ${(row.categories || []).map((category) => `
-                  <span class="category-chip ${categoryClass(category)}">${category}</span>
+                  <span class="category-chip ${categoryClass(category)}">${escapeHtml(category)}</span>
                 `).join("")}
               </div>
             </div>
@@ -2134,13 +2318,13 @@
 
       $("#historyBody").innerHTML = rows.length ? rows.map((row) => `
         <tr>
-          <td class="date">${row.date}</td>
-          <td><span class="category-chip ${categoryClass(row.category)}">${row.category}</span></td>
+          <td class="date">${escapeHtml(row.date)}</td>
+          <td><span class="category-chip ${categoryClass(row.category)}">${escapeHtml(row.category)}</span></td>
           <td>
-            <div class="history-detail">${row.detail}</div>
+            <div class="history-detail">${escapeHtml(row.detail)}</div>
           </td>
           <td>
-            <div class="history-action">${row.nextAction || "-"}</div>
+            <div class="history-action">${escapeHtml(row.nextAction || "-")}</div>
           </td>
         </tr>
       `).join("") : `<tr><td colspan="4"><div class="empty">조건에 맞는 실수 히스토리가 없습니다.</div></td></tr>`;
@@ -2171,6 +2355,10 @@
       renderHistoryFilters();
       renderHistory();
     }
+
+    $("#exportJson").addEventListener("click", downloadJson);
+    $("#importJson").addEventListener("click", () => $("#jsonImportInput").click());
+    $("#jsonImportInput").addEventListener("change", importJsonFromFile);
 
     $$(".page-tab").forEach((tab) => tab.addEventListener("click", () => setPage(tab.dataset.page)));
     $("#monthInput").addEventListener("change", () => setMonth($("#monthInput").value));
