@@ -248,7 +248,7 @@
 
     .check-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 210px;
+      grid-template-columns: minmax(0, 1fr) 190px;
       gap: 10px;
       align-items: start;
     }
@@ -278,14 +278,17 @@
       display: grid;
       align-content: start;
       justify-items: center;
+      justify-self: center;
       gap: 10px;
+      width: 176px;
+      box-sizing: border-box;
       padding: 10px;
     }
 
     .check-sidebar .month-nav {
       position: relative;
       display: block;
-      width: 150px;
+      width: 100%;
       max-width: 100%;
     }
 
@@ -383,9 +386,10 @@
 
     .check-sidebar .chip {
       justify-content: center;
-      width: 150px;
+      width: 100%;
       max-width: 100%;
       text-align: center;
+      box-sizing: border-box;
     }
 
     .check-sidebar .progress-chip { min-width: 0; }
@@ -1163,7 +1167,7 @@
       .app-header { align-items: flex-start; flex-direction: column; }
       .header-actions { justify-content: flex-start; }
       .check-layout, .two-col, .record-layout, .history-overview { grid-template-columns: 1fr; }
-      .check-sidebar { position: static; order: -1; }
+      .check-sidebar { position: static; order: -1; justify-self: center; }
     }
 
     @media (max-width: 620px) {
