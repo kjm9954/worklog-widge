@@ -515,7 +515,7 @@
 
     .history-insights {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 10px;
     }
 
@@ -530,6 +530,18 @@
       box-shadow: var(--shadow-sm);
       padding: 10px 12px;
     }
+
+    .insight-card.core { grid-column: span 3; }
+    .insight-card.impact-card {
+      grid-column: span 2;
+      min-height: 74px;
+    }
+    .insight-card.impact-card strong { font-size: 1.35rem; }
+    .insight-card.impact-card.external {
+      border-color: #f1bfc0;
+      background: var(--red-bg);
+    }
+    .insight-card.impact-card.external strong { color: var(--red); }
 
     .insight-label {
       color: var(--text-muted);
@@ -670,6 +682,7 @@
     }
 
     .day-foot { justify-content: flex-start; }
+    .day.today .day-top { justify-content: flex-start; }
 
     .day-num { font-size: 0.8125rem; font-weight: 900; }
     .day.today .day-num {
@@ -717,7 +730,9 @@
 
     .quick-btn.ok.active { background: var(--blue-bg); border-color: #b9d6f3; color: #1b69b5; }
     .quick-btn.miss.active { background: var(--red-bg); border-color: #f1bfc0; color: #c02b2b; }
+    .day.today .quick-btn { background: var(--card); }
     .day.today .quick-btn.ok.active { background: var(--card); border-color: var(--blue); color: var(--blue); }
+    .day.today .quick-btn.miss.active { background: var(--red-bg); border-color: #f1bfc0; color: var(--red); }
     .quick-btn:disabled { cursor: default; opacity: 0.62; }
 
     .day-top.only-date {
@@ -886,6 +901,41 @@
     }
 
     .cat-remove:hover { background: var(--card); color: var(--text); }
+
+    .impact-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .impact-option {
+      min-height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--text-muted);
+      padding: 4px 11px;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .impact-option:hover {
+      background: var(--bg-2);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .impact-option.active {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+      color: var(--blue);
+    }
+
+    .impact-option.external.active {
+      border-color: #f1bfc0;
+      background: var(--red-bg);
+      color: var(--red);
+    }
 
     .record-actions {
       display: flex;
@@ -1162,6 +1212,36 @@
     .history-table .date { color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .history-table .category-chip { font-size: 0.625rem; padding: 1px 7px; }
 
+    .history-type-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .impact-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border-radius: 999px;
+      background: var(--gray-bg);
+      color: var(--text-muted);
+      padding: 1px 7px;
+      font-size: 0.625rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .impact-badge.team {
+      background: var(--blue-bg);
+      color: var(--blue);
+    }
+
+    .impact-badge.external {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
     .history-resize-handle {
       position: absolute;
       top: 0;
@@ -1216,6 +1296,8 @@
       .page-tab { flex: 0 0 auto; }
       .nav-card { padding: 10px; }
       .history-insights { grid-template-columns: 1fr; }
+      .insight-card.core,
+      .insight-card.impact-card { grid-column: auto; }
       .summary-chips { width: 100%; }
       .chip { flex: 1 1 calc(50% - 8px); }
       .record-actions { grid-template-columns: 1fr; }
@@ -1335,10 +1417,16 @@
               <form class="form-grid" id="recordForm">
                 <label class="field"><span class="step-label"><span class="step-num">1</span>카테고리 선택</span>
                   <input id="recordCategoryValue" type="hidden">
+                  <input id="recordImpactValue" type="hidden" value="self">
                   <div class="cat-picker" id="catButtons"></div>
                   <div class="cat-manager">
                     <input id="categoryInput" placeholder="카테고리 추가">
                     <button class="btn" id="addCategory" type="button">추가</button>
+                  </div>
+                  <div class="impact-picker" id="impactButtons" aria-label="영향 범위">
+                    <button class="impact-option" data-impact="self" type="button">나만</button>
+                    <button class="impact-option" data-impact="team" type="button">팀</button>
+                    <button class="impact-option external" data-impact="external" type="button">외부</button>
                   </div>
                 </label>
 
@@ -1384,15 +1472,30 @@
           <section class="history-overview">
             <div class="history-left">
               <section class="history-insights" aria-label="이번 달 히스토리 핵심 지표">
-                <article class="insight-card" id="monthChangeCard">
+                <article class="insight-card core" id="monthChangeCard">
                   <span class="insight-label">전월 대비 변화</span>
                   <strong id="monthChangeValue">-</strong>
                   <p id="monthChangeText">이번 달 실수 흐름을 계산 중입니다.</p>
                 </article>
-                <article class="insight-card" id="streakCard">
+                <article class="insight-card core" id="streakCard">
                   <span class="insight-label">연속 무실수 일수</span>
                   <strong id="streakValue">-</strong>
                   <p id="streakText">최근 체크 흐름을 계산 중입니다.</p>
+                </article>
+                <article class="insight-card impact-card">
+                  <span class="insight-label">나만 영향</span>
+                  <strong id="impactSelfCount">0건</strong>
+                  <p>내 작업 안에서 정리 가능</p>
+                </article>
+                <article class="insight-card impact-card">
+                  <span class="insight-label">팀 영향</span>
+                  <strong id="impactTeamCount">0건</strong>
+                  <p>팀 공유와 확인 필요</p>
+                </article>
+                <article class="insight-card impact-card external">
+                  <span class="insight-label">외부 영향</span>
+                  <strong id="impactExternalCount">0건</strong>
+                  <p>외부 노출 전 우선 점검</p>
                 </article>
               </section>
 
@@ -1470,17 +1573,17 @@
     const seedPayload = window.__WORK_RETRO_DATA__ || {};
 
     const fallbackSeedRecords = {
-      "2026-05-01": { status: "ok", category: "", detail: "" },
-      "2026-05-04": { status: "ok", category: "", detail: "" },
-      "2026-05-05": { status: "ok", category: "", detail: "" },
-      "2026-05-06": { status: "miss", category: "", detail: "프레임 데이터 수정 후 기본 양식 체크를 빠뜨렸다." },
-      "2026-05-07": { status: "ok", category: "", detail: "" },
-      "2026-05-11": { status: "ok", category: "", detail: "" },
-      "2026-05-12": { status: "", category: "", detail: "" },
-      "2026-04-23": { status: "miss", category: "", detail: "플랫폼 이슈를 기획서에서 히스토리 찾느라 시간이 오래 걸렸다." },
-      "2026-04-15": { status: "miss", category: "", detail: "텍스트 수정 시 기존 히스토리 체크를 놓쳤다." },
-      "2026-03-25": { status: "miss", category: "", detail: "미션 튜토리얼 번호 변경 QA/내부 공유 누락." },
-      "2026-03-20": { status: "miss", category: "", detail: "맵 추가 후 다이아 맵 로딩 이슈 발생. 커밋 전 확인 필요." }
+      "2026-05-01": { status: "ok", category: "", detail: "", impact: "self" },
+      "2026-05-04": { status: "ok", category: "", detail: "", impact: "self" },
+      "2026-05-05": { status: "ok", category: "", detail: "", impact: "self" },
+      "2026-05-06": { status: "miss", category: "", detail: "프레임 데이터 수정 후 기본 양식 체크를 빠뜨렸다.", impact: "self" },
+      "2026-05-07": { status: "ok", category: "", detail: "", impact: "self" },
+      "2026-05-11": { status: "ok", category: "", detail: "", impact: "self" },
+      "2026-05-12": { status: "", category: "", detail: "", impact: "self" },
+      "2026-04-23": { status: "miss", category: "", detail: "플랫폼 이슈를 기획서에서 히스토리 찾느라 시간이 오래 걸렸다.", impact: "self" },
+      "2026-04-15": { status: "miss", category: "", detail: "텍스트 수정 시 기존 히스토리 체크를 놓쳤다.", impact: "self" },
+      "2026-03-25": { status: "miss", category: "", detail: "미션 튜토리얼 번호 변경 QA/내부 공유 누락.", impact: "self" },
+      "2026-03-20": { status: "miss", category: "", detail: "맵 추가 후 다이아 맵 로딩 이슈 발생. 커밋 전 확인 필요.", impact: "self" }
     };
     const seedRecords = seedPayload.records || fallbackSeedRecords;
     const seedCategories = Array.isArray(seedPayload.categories) ? seedPayload.categories : [];
@@ -1543,6 +1646,7 @@
         record.status = normalizeStatus(record.status);
         record.category = normalizeCategory(record.category);
         record.nextAction = record.nextAction || "";
+        record.impact = normalizeImpact(record.impact);
       });
       return source;
     }
@@ -1622,6 +1726,24 @@
       return "";
     }
 
+    function normalizeImpact(value) {
+      const text = String(value || "").trim().toLowerCase();
+      if (["team", "팀"].includes(text)) return "team";
+      if (["external", "외부"].includes(text)) return "external";
+      return "self";
+    }
+
+    function impactLabel(value) {
+      const impact = normalizeImpact(value);
+      if (impact === "team") return "팀";
+      if (impact === "external") return "외부";
+      return "나만";
+    }
+
+    function impactClass(value) {
+      return normalizeImpact(value);
+    }
+
     function combineText(current, next) {
       const lines = [current, next]
         .flatMap((value) => String(value || "").split(/\r?\n/))
@@ -1631,7 +1753,7 @@
     }
 
     function mergeRecord(target, key, incoming) {
-      const current = target[key] || { status: "", category: "", detail: "", nextAction: "" };
+      const current = target[key] || { status: "", category: "", detail: "", nextAction: "", impact: "self" };
       const categories = [current.category, incoming.category]
         .flatMap(splitCategories)
         .filter(Boolean);
@@ -1639,7 +1761,8 @@
         status: current.status === "miss" || incoming.status === "miss" ? "miss" : current.status || incoming.status || "",
         category: Array.from(new Set(categories)).join(", "),
         detail: combineText(current.detail, incoming.detail),
-        nextAction: combineText(current.nextAction, incoming.nextAction)
+        nextAction: combineText(current.nextAction, incoming.nextAction),
+        impact: normalizeImpact(incoming.impact || current.impact)
       };
     }
 
@@ -1663,7 +1786,8 @@
           status: normalizeStatus(rowValue(row, ["status", "상태", "체크"])) || "miss",
           category: normalizeCategory(String(rowValue(row, ["category", "카테고리", "유형", "구분"]) || "").trim()),
           detail: String(rowValue(row, ["detail", "상세 내용", "상세내용", "내용"]) || "").trim(),
-          nextAction: String(rowValue(row, ["nextAction", "next_action", "개선 사항", "개선사항", "다음 액션", "다음엔 뭘 확인할까"]) || "").trim()
+          nextAction: String(rowValue(row, ["nextAction", "next_action", "개선 사항", "개선사항", "다음 액션", "다음엔 뭘 확인할까"]) || "").trim(),
+          impact: normalizeImpact(rowValue(row, ["impact", "영향 범위", "영향범위"]))
         };
         mergeRecord(nextRecords, key, incoming);
       });
@@ -1682,7 +1806,8 @@
           status: normalizeStatus(record.status),
           category: normalizeCategory(String(record.category || "").trim()),
           detail: String(record.detail || "").trim(),
-          nextAction: String(record.nextAction || record.next_action || "").trim()
+          nextAction: String(record.nextAction || record.next_action || "").trim(),
+          impact: normalizeImpact(record.impact)
         };
         mergeRecord(nextRecords, key, incoming);
       });
@@ -1945,7 +2070,8 @@
     }
 
     function recordFor(key) {
-      if (!records[key]) records[key] = { status: "", category: "", detail: "", nextAction: "" };
+      if (!records[key]) records[key] = { status: "", category: "", detail: "", nextAction: "", impact: "self" };
+      records[key].impact = normalizeImpact(records[key].impact);
       return records[key];
     }
 
@@ -1989,6 +2115,19 @@
       hideSaveComplete();
       renderCategoryControls();
       renderSimilarMistakes($("#recordCategoryValue").value);
+    }
+
+    function setSelectedImpact(impact) {
+      $("#recordImpactValue").value = normalizeImpact(impact);
+      hideSaveComplete();
+      renderImpactControls();
+    }
+
+    function renderImpactControls(selectedImpact = $("#recordImpactValue")?.value || "self") {
+      const selected = normalizeImpact(selectedImpact);
+      $$(".impact-option").forEach((button) => {
+        button.classList.toggle("active", normalizeImpact(button.dataset.impact) === selected);
+      });
     }
 
     function addManagedCategory() {
@@ -2338,9 +2477,11 @@
       const selectedCategory = managedCategories.includes(storedCategory) ? storedCategory : "";
       $("#recordDateLabel").textContent = fullDateLabel(selectedDate);
       $("#recordCategoryValue").value = selectedCategory;
+      $("#recordImpactValue").value = normalizeImpact(record.impact);
       $("#recordDetail").value = record.detail || "";
       $("#recordNextAction").value = record.nextAction || "";
       renderCategoryControls(selectedCategory);
+      renderImpactControls(record.impact);
       renderSimilarMistakes(selectedCategory);
       $("#saveComplete").classList.toggle("show", savedNoticeKey === selectedDate);
     }
@@ -2356,6 +2497,7 @@
       record.category = $("#recordCategoryValue").value;
       record.detail = $("#recordDetail").value.trim();
       record.nextAction = $("#recordNextAction").value.trim();
+      record.impact = normalizeImpact($("#recordImpactValue").value);
       savedNoticeKey = selectedDate;
       saveRecords();
       renderAll();
@@ -2444,6 +2586,16 @@
       $("#streakCard").classList.toggle("warn", streak === 0);
     }
 
+    function renderImpactInsights() {
+      const counts = { self: 0, team: 0, external: 0 };
+      historyRows().forEach((row) => {
+        counts[normalizeImpact(row.impact)] += 1;
+      });
+      $("#impactSelfCount").textContent = `${counts.self}건`;
+      $("#impactTeamCount").textContent = `${counts.team}건`;
+      $("#impactExternalCount").textContent = `${counts.external}건`;
+    }
+
     function renderTrendBars() {
       const rows = trendRows();
       const max = Math.max(1, ...rows.map((row) => row.miss + row.ok));
@@ -2503,14 +2655,16 @@
           date: displayDate(date),
           category: normalizeCategory(record.category) || "미입력",
           detail: record.detail || "상세 내용 작성 필요",
-          nextAction: record.nextAction || ""
+          nextAction: record.nextAction || "",
+          impact: normalizeImpact(record.impact)
         }));
       const olderRows = olderHistory.map((row) => ({
         sortKey: olderDateToKey(row.date),
         date: row.date,
         category: normalizeCategory(row.category) || "미입력",
         detail: row.detail || "상세 내용 작성 필요",
-        nextAction: row.nextAction || ""
+        nextAction: row.nextAction || "",
+        impact: normalizeImpact(row.impact)
       }));
       return [...currentRows, ...olderRows].sort((a, b) => b.sortKey.localeCompare(a.sortKey));
     }
@@ -2518,14 +2672,19 @@
     function renderHistory() {
       const query = $("#historySearch").value.trim().toLowerCase();
       const rows = historyRows().filter((row) => {
-        const text = `${row.date} ${row.category} ${row.detail} ${row.nextAction || ""}`.toLowerCase();
+        const text = `${row.date} ${row.category} ${impactLabel(row.impact)} ${row.detail} ${row.nextAction || ""}`.toLowerCase();
         return (!query || text.includes(query)) && (!activeHistoryFilter || legacyCategoryMatch(row.category, activeHistoryFilter));
       });
 
       $("#historyBody").innerHTML = rows.length ? rows.map((row) => `
         <tr>
           <td class="date">${escapeHtml(row.date)}</td>
-          <td><span class="category-chip ${categoryClass(row.category)}">${escapeHtml(row.category)}</span></td>
+          <td>
+            <div class="history-type-stack">
+              <span class="category-chip ${categoryClass(row.category)}">${escapeHtml(row.category)}</span>
+              <span class="impact-badge ${impactClass(row.impact)}">${escapeHtml(impactLabel(row.impact))}</span>
+            </div>
+          </td>
           <td>
             <div class="history-detail">${escapeHtml(row.detail)}</div>
           </td>
@@ -2556,6 +2715,7 @@
       renderCalendar();
       renderRecordPage();
       renderHistoryInsights();
+      renderImpactInsights();
       renderTrendBars();
       renderMonthHistory();
       renderHistoryFilters();
@@ -2627,6 +2787,11 @@
       setSelectedCategory(option.dataset.cat);
     });
 
+    $("#impactButtons").addEventListener("click", (event) => {
+      const option = event.target.closest(".impact-option");
+      if (option) setSelectedImpact(option.dataset.impact);
+    });
+
     $("#addCategory").addEventListener("click", addManagedCategory);
     $("#categoryInput").addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -2658,7 +2823,7 @@
     });
 
     $("#resetDemo").addEventListener("click", () => {
-      records = cloneSeed();
+      records = normalizeRecords(cloneSeed());
       managedCategories = [...seedCategories];
       localStorage.setItem(storeKey, JSON.stringify(records));
       saveCategories();
