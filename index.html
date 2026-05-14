@@ -990,6 +990,45 @@
 
     .similar-list { display: grid; gap: 8px; }
 
+    .similar-repeat-banner,
+    .similar-action-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+    }
+
+    .similar-repeat-banner {
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 0.875rem;
+      font-weight: 950;
+    }
+
+    .similar-action-card {
+      display: grid;
+      gap: 5px;
+      background: var(--card);
+    }
+
+    .similar-action-card .label {
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-weight: 950;
+    }
+
+    .similar-action-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.8125rem;
+      font-weight: 850;
+    }
+
+    .similar-action-card small {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
     .similar-item,
     .similar-empty {
       border: 1px solid var(--border);
@@ -2381,7 +2420,8 @@
           key: date,
           date: displayDate(date),
           detail: record.detail,
-          nextAction: record.nextAction || ""
+          nextAction: record.nextAction || "",
+          impact: normalizeImpact(record.impact)
         }));
 
       const olderRows = olderHistory
@@ -2390,7 +2430,8 @@
           key: olderDateToKey(row.date),
           date: row.date,
           detail: row.detail,
-          nextAction: row.nextAction || ""
+          nextAction: row.nextAction || "",
+          impact: normalizeImpact(row.impact)
         }));
 
       return [...currentRows, ...olderRows].slice(0, 3);
@@ -2410,7 +2451,8 @@
           key: date,
           date: displayDate(date),
           detail: record.detail,
-          nextAction: record.nextAction || ""
+          nextAction: record.nextAction || "",
+          impact: normalizeImpact(record.impact)
         }));
 
       const olderRows = olderHistory
@@ -2419,7 +2461,8 @@
           key: olderDateToKey(row.date),
           date: row.date,
           detail: row.detail,
-          nextAction: row.nextAction || ""
+          nextAction: row.nextAction || "",
+          impact: normalizeImpact(row.impact)
         }));
 
       return [...currentRows, ...olderRows].sort((a, b) => b.key.localeCompare(a.key));
@@ -2441,6 +2484,8 @@
 
       const allRows = allSimilarMistakeRows(normalizedCategory);
       const rows = allRows.slice(0, 3);
+      const repeatCount = allRows.length + 1;
+      const previousAction = allRows.find((row) => String(row.nextAction || "").trim());
       const selected = keyToUtc(selectedDate);
       const recentCount = allRows.filter((row) => {
         const diff = (selected - keyToUtc(row.key)) / 86400000;
@@ -2459,16 +2504,34 @@
         </div>
       `;
 
-      container.innerHTML = rows.length ? rows.map((row) => `
-        <article class="similar-item">
-          <div class="similar-meta">
-            <strong>${escapeHtml(row.date)}</strong>
-            <span class="similar-badge">이번 기록과 비슷함</span>
-          </div>
-          <p>${escapeHtml(oneLine(row.detail))}</p>
-          ${row.nextAction ? `<small>다음 확인: ${escapeHtml(oneLine(row.nextAction))}</small>` : ""}
-        </article>
-      `).join("") : `<div class="similar-empty">최근 같은 카테고리 실수가 없습니다. 이번 기록이 첫 기준점이 됩니다.</div>`;
+      const chunks = [];
+      if (repeatCount > 1) {
+        chunks.push(`<div class="similar-repeat-banner">이번이 ${repeatCount}번째 같은 유형</div>`);
+      }
+      if (previousAction) {
+        chunks.push(`
+          <article class="similar-action-card">
+            <span class="label">지난번엔 이렇게 하기로 했어요</span>
+            <p>${escapeHtml(oneLine(previousAction.nextAction))}</p>
+            <small>${escapeHtml(previousAction.date)} 작성</small>
+          </article>
+        `);
+      }
+      if (rows.length) {
+        chunks.push(rows.map((row) => `
+          <article class="similar-item">
+            <div class="similar-meta">
+              <strong>${escapeHtml(row.date)}</strong>
+              <span class="impact-badge ${impactClass(row.impact)}">${escapeHtml(impactLabel(row.impact))}</span>
+            </div>
+            <p>${escapeHtml(oneLine(row.detail))}</p>
+            ${row.nextAction ? `<small>다음 확인: ${escapeHtml(oneLine(row.nextAction))}</small>` : ""}
+          </article>
+        `).join(""));
+      } else {
+        chunks.push(`<div class="similar-empty">최근 같은 카테고리 실수가 없습니다. 이번 기록이 첫 기준점이 됩니다.</div>`);
+      }
+      container.innerHTML = chunks.join("");
     }
 
     function renderRecordPage() {
