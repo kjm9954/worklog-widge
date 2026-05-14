@@ -292,6 +292,48 @@
       max-width: 100%;
     }
 
+    .retro-nudge {
+      display: grid;
+      gap: 7px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ead796;
+      border-radius: var(--radius-sm);
+      background: var(--warn-bg);
+      color: var(--warn-fg);
+      padding: 10px;
+      text-align: left;
+    }
+
+    .retro-nudge[hidden] { display: none; }
+
+    .retro-nudge-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.6875rem;
+      font-weight: 950;
+    }
+
+    .retro-nudge strong {
+      color: var(--text);
+      font-size: 0.8125rem;
+      line-height: 1.35;
+    }
+
+    .retro-nudge p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .retro-nudge .btn {
+      width: 100%;
+      min-height: 28px;
+      background: var(--card);
+    }
+
     .month-popover-button {
       width: 100%;
       min-height: 34px;
@@ -1414,6 +1456,12 @@
           </article>
 
           <aside class="nav-card check-sidebar" aria-label="월간 체크 요약">
+            <div class="retro-nudge" id="retroNudge" hidden>
+              <span class="retro-nudge-label"><span aria-hidden="true">💡</span>회고 신호</span>
+              <strong id="retroNudgeTitle">이번 달에 같은 실수가 반복됐어요</strong>
+              <p>잠깐 히스토리 보고 갈까요?</p>
+              <button class="btn" id="nudgeHistoryButton" type="button">히스토리 보기</button>
+            </div>
             <div class="month-nav">
               <button class="month-popover-button" id="monthPickerButton" type="button" aria-expanded="false" aria-controls="monthPopover">
                 <span id="monthTitle">2026년 4월</span>
@@ -2269,7 +2317,16 @@
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([category]) => category);
       const top = categories[0] || "-";
-      return { checked: checked.length, miss: miss.length, ok: ok.length, top, categories, required: requiredDays.length };
+      return { checked: checked.length, miss: miss.length, ok: ok.length, top, categories, categoryCounts, required: requiredDays.length };
+    }
+
+    function nudgeForMonth(monthValue) {
+      const entries = Object.entries(statsForMonth(monthValue).categoryCounts || {})
+        .filter(([, count]) => count >= 2)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      if (!entries.length) return null;
+      const [category, count] = entries[0];
+      return { category, count };
     }
 
     function setPage(page) {
@@ -2363,13 +2420,19 @@
     }
 
     function renderSummary() {
-      const stats = statsForMonth($("#monthInput").value);
-      $("#monthTitle").textContent = monthTitle($("#monthInput").value);
+      const monthValue = $("#monthInput").value;
+      const stats = statsForMonth(monthValue);
+      const nudge = nudgeForMonth(monthValue);
+      $("#monthTitle").textContent = monthTitle(monthValue);
       $("#missCount").textContent = stats.miss;
       $("#okCount").textContent = stats.ok;
       $("#checkedCount").textContent = `${stats.checked}/${stats.required}`;
       $("#checkProgress").style.width = `${stats.required ? Math.round((stats.checked / stats.required) * 100) : 0}%`;
       $("#topCategory").textContent = stats.top;
+      $("#retroNudge").hidden = !nudge;
+      if (nudge) {
+        $("#retroNudgeTitle").textContent = `이번 달에 '${nudge.category}' 실수 ${nudge.count}번`;
+      }
       if (monthPopoverOpen) renderMonthPopover();
     }
 
@@ -2829,6 +2892,7 @@
       if (event.key === "Escape" && monthPopoverOpen) closeMonthPopover();
     });
     $("#backToCheck").addEventListener("click", () => setPage("check"));
+    $("#nudgeHistoryButton").addEventListener("click", () => setPage("history"));
 
     $("#catButtons").addEventListener("click", (event) => {
       const removeButton = event.target.closest(".cat-remove");
