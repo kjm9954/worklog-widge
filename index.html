@@ -579,11 +579,16 @@
       min-height: 74px;
     }
     .insight-card.impact-card strong { font-size: 1.35rem; }
-    .insight-card.impact-card.external {
+    .insight-card.impact-card.zero {
+      border-color: var(--border);
+      background: var(--bg-2);
+    }
+    .insight-card.impact-card.zero strong { color: var(--text-subtle); }
+    .insight-card.impact-card.external.has-count {
       border-color: #f1bfc0;
       background: var(--red-bg);
     }
-    .insight-card.impact-card.external strong { color: var(--red); }
+    .insight-card.impact-card.external.has-count strong { color: var(--red); }
 
     .insight-label {
       color: var(--text-muted);
@@ -600,8 +605,9 @@
     }
 
     .insight-card p { margin: 0; color: var(--text-muted); font-size: 0.75rem; }
-    .insight-card.good strong { color: var(--blue); }
+    .insight-card.good strong { color: var(--green-fg); }
     .insight-card.warn strong { color: var(--red); }
+    .insight-card.neutral strong { color: var(--text-muted); }
     .history-left > .panel,
     .history-month-panel {
       height: 100%;
@@ -819,15 +825,22 @@
 
     .field {
       display: grid;
-      gap: 6px;
+      gap: 8px;
       color: var(--text-muted);
       font-size: 0.75rem;
       font-weight: 800;
     }
 
     .field textarea { min-height: 124px; resize: vertical; }
-    .field textarea.short { min-height: 82px; }
-    .form-grid { display: grid; gap: 18px; }
+    .field textarea.short { min-height: 54px; }
+    .form-grid { display: grid; gap: 14px; }
+
+    .step-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
     .step-label {
       display: inline-flex;
@@ -849,6 +862,12 @@
       font-size: 0.6875rem;
       line-height: 1;
       font-weight: 950;
+    }
+
+    .step-note {
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-weight: 800;
     }
 
     .cat-picker {
@@ -947,7 +966,7 @@
     .impact-picker {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
     }
 
     .impact-option {
@@ -955,10 +974,10 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       background: var(--card);
-      color: var(--text-muted);
-      padding: 4px 11px;
+      color: var(--text);
+      padding: 4px 12px;
       font-size: 0.75rem;
-      font-weight: 900;
+      font-weight: 800;
     }
 
     .impact-option:hover {
@@ -971,12 +990,22 @@
       border-color: var(--blue);
       background: var(--blue-bg);
       color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue) inset;
+      font-weight: 950;
+    }
+
+    .impact-option[data-impact="team"].active {
+      border-color: #ead796;
+      background: var(--warn-bg);
+      color: var(--warn-fg);
+      box-shadow: 0 0 0 1px #d9bd66 inset;
     }
 
     .impact-option.external.active {
       border-color: #f1bfc0;
       background: var(--red-bg);
       color: var(--red);
+      box-shadow: 0 0 0 1px var(--red) inset;
     }
 
     .record-actions {
@@ -1154,6 +1183,32 @@
       text-align: right;
     }
 
+    .trend-legend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-weight: 800;
+    }
+
+    .trend-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-swatch {
+      display: inline-block;
+      width: 14px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .legend-swatch.miss { background: var(--red); }
+    .legend-swatch.ok { background: #4a86e8; }
+
     .stack {
       height: 18px;
       border-radius: var(--radius-sm);
@@ -1161,6 +1216,15 @@
       overflow: hidden;
       display: flex;
       box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    .stack .miss,
+    .stack .ok {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .stack .miss { background: var(--red); }
@@ -1178,7 +1242,7 @@
     .month-card-head {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 8px;
       font-weight: 900;
     }
@@ -1186,10 +1250,9 @@
     .month-title { font-size: 0.9375rem; }
     .month-categories {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       flex-wrap: wrap;
       gap: 5px;
-      max-width: 70%;
     }
 
     .month-card p { margin: 0; color: var(--text-muted); font-size: 0.75rem; }
@@ -1206,11 +1269,15 @@
     .month-delta {
       border-radius: 999px;
       background: var(--gray-bg);
-      padding: 1px 7px;
+      padding: 2px 8px;
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-weight: 900;
+      white-space: nowrap;
     }
 
-    .month-delta.good { color: var(--blue); }
-    .month-delta.warn { color: var(--red); }
+    .month-delta.good { background: var(--green-bg); color: var(--green-fg); }
+    .month-delta.warn { background: var(--red-bg); color: var(--red); }
 
     .search-row {
       display: grid;
@@ -1262,12 +1329,13 @@
       border-collapse: collapse;
       table-layout: fixed;
       font-size: 0.8125rem;
-      --history-detail-col: 50%;
-      --history-action-col: 30%;
+      --history-detail-col: 44%;
+      --history-action-col: 26%;
     }
 
     .history-col-date { width: 8%; }
-    .history-col-type { width: 12%; }
+    .history-col-category { width: 12%; }
+    .history-col-impact { width: 10%; }
     .history-col-detail { width: var(--history-detail-col); }
     .history-col-action { width: var(--history-action-col); }
 
@@ -1293,13 +1361,6 @@
     .history-table .date { color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .history-table .category-chip { font-size: 0.625rem; padding: 1px 7px; }
 
-    .history-type-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      align-items: center;
-    }
-
     .impact-badge {
       display: inline-flex;
       align-items: center;
@@ -1321,6 +1382,22 @@
     .impact-badge.external {
       background: var(--red-bg);
       color: var(--red);
+      box-shadow: 0 0 0 1px #f1bfc0 inset;
+    }
+
+    .history-action-link {
+      border: 0;
+      background: transparent;
+      color: var(--text-subtle);
+      padding: 0;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .history-action-link:hover {
+      color: var(--text-muted);
     }
 
     .history-resize-handle {
@@ -1502,26 +1579,34 @@
               </div>
 
               <form class="form-grid" id="recordForm">
-                <label class="field"><span class="step-label"><span class="step-num">1</span>카테고리 선택</span>
+                <div class="field">
+                  <span class="step-label"><span class="step-num">1</span>카테고리 선택</span>
                   <input id="recordCategoryValue" type="hidden">
-                  <input id="recordImpactValue" type="hidden" value="self">
                   <div class="cat-picker" id="catButtons"></div>
                   <div class="cat-manager">
                     <input id="categoryInput" placeholder="카테고리 추가">
                     <button class="btn" id="addCategory" type="button">추가</button>
                   </div>
+                </div>
+
+                <div class="field">
+                  <div class="step-heading">
+                    <span class="step-label"><span class="step-num">2</span>영향 범위</span>
+                    <span class="step-note">기본값 나만, 1번 탭</span>
+                  </div>
+                  <input id="recordImpactValue" type="hidden" value="self">
                   <div class="impact-picker" id="impactButtons" aria-label="영향 범위">
                     <button class="impact-option" data-impact="self" type="button">나만</button>
                     <button class="impact-option" data-impact="team" type="button">팀</button>
                     <button class="impact-option external" data-impact="external" type="button">외부</button>
                   </div>
-                </label>
+                </div>
 
-                <label class="field"><span class="step-label"><span class="step-num">2</span>무슨 일이 있었나</span>
+                <label class="field"><span class="step-label"><span class="step-num">3</span>무슨 일이 있었나</span>
                   <textarea id="recordDetail" placeholder="예: 데이터 수정 후 기존 체크리스트를 확인하지 못함."></textarea>
                 </label>
 
-                <label class="field"><span class="step-label"><span class="step-num">3</span>다음엔 뭘 확인할까</span>
+                <label class="field"><span class="step-label"><span class="step-num">4</span>다음엔 뭘 확인할까</span>
                   <textarea class="short" id="recordNextAction" placeholder="예: 공유 전 데이터 검수 3단계를 먼저 확인."></textarea>
                 </label>
 
@@ -1569,17 +1654,17 @@
                   <strong id="streakValue">-</strong>
                   <p id="streakText">최근 체크 흐름을 계산 중입니다.</p>
                 </article>
-                <article class="insight-card impact-card">
+                <article class="insight-card impact-card" id="impactSelfCard">
                   <span class="insight-label">나만 영향</span>
                   <strong id="impactSelfCount">0건</strong>
                   <p>내 작업 안에서 정리 가능</p>
                 </article>
-                <article class="insight-card impact-card">
+                <article class="insight-card impact-card" id="impactTeamCard">
                   <span class="insight-label">팀 영향</span>
                   <strong id="impactTeamCount">0건</strong>
                   <p>팀 공유와 확인 필요</p>
                 </article>
-                <article class="insight-card impact-card external">
+                <article class="insight-card impact-card external" id="impactExternalCard">
                   <span class="insight-label">외부 영향</span>
                   <strong id="impactExternalCount">0건</strong>
                   <p>외부 노출 전 우선 점검</p>
@@ -1590,7 +1675,10 @@
                 <div class="panel-head">
                   <div>
                     <h2 class="panel-title">최근 3개월 실수 추이</h2>
-                    <p class="panel-sub">빨강은 실수 있음, 파랑은 실수 없음입니다.</p>
+                    <div class="trend-legend" aria-label="실수 추이 범례">
+                      <span><span class="legend-swatch miss" aria-hidden="true"></span>실수</span>
+                      <span><span class="legend-swatch ok" aria-hidden="true"></span>실수 없음</span>
+                    </div>
                   </div>
                 </div>
                 <div class="panel-body">
@@ -1628,14 +1716,16 @@
               <table class="history-table" id="historyTable" aria-label="지난 실수 상세 히스토리">
                 <colgroup>
                   <col class="history-col-date">
-                  <col class="history-col-type">
+                  <col class="history-col-category">
+                  <col class="history-col-impact">
                   <col class="history-col-detail">
                   <col class="history-col-action">
                 </colgroup>
                 <thead>
                   <tr>
                     <th>날짜</th>
-                    <th>유형</th>
+                    <th>카테고리</th>
+                    <th>영향 범위</th>
                     <th>상세 내용 <span class="history-resize-handle" id="historyDetailResize" aria-hidden="true"></span></th>
                     <th>개선 사항</th>
                   </tr>
@@ -1651,6 +1741,9 @@
 
   <script src="work-retro-data.js"></script>
   <script>
+    const WORKER_URL = "https://notion-widgets-api.wldnjsdkk.workers.dev";
+    const WIDGET_API_KEY = "";
+    const CLOUD_SYNC_DEBOUNCE_MS = 1200;
     const storeKey = "retro-calendar-widget-v8";
     const categoryStoreKey = "retro-calendar-widget-categories-v2";
     const historyColumnStoreKey = "retro-calendar-widget-history-columns-v1";
@@ -1687,6 +1780,12 @@
     let monthPopoverOpen = false;
     let saveStateTimer = null;
     let lastExportJson = "";
+    let cloudSyncEnabled = false;
+    let cloudSyncTimer = null;
+    let cloudSyncInFlight = false;
+    let cloudSyncPending = false;
+    let cloudApplyingRemote = false;
+    let cloudLastSignature = "";
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -1738,12 +1837,30 @@
       return source;
     }
 
+    function scheduleCloudSave(delay = CLOUD_SYNC_DEBOUNCE_MS) {
+      if (!cloudSyncEnabled || cloudApplyingRemote) return;
+      if (cloudSyncTimer) window.clearTimeout(cloudSyncTimer);
+      cloudSyncTimer = window.setTimeout(() => saveCloudStateNow(), delay);
+    }
+
     function saveCategories() {
       localStorage.setItem(categoryStoreKey, JSON.stringify(managedCategories));
+      scheduleCloudSave();
     }
 
     function clamp(value, min, max) {
       return Math.min(max, Math.max(min, value));
+    }
+
+    function normalizeHistoryColumns(detailValue, actionValue) {
+      let detail = clamp(Number(detailValue) || 44, 24, 50);
+      let action = clamp(Number(actionValue) || 26, 16, 40);
+      const maxTotal = 70;
+      if (detail + action > maxTotal) {
+        action = clamp(maxTotal - detail, 16, 40);
+        detail = clamp(maxTotal - action, 24, 50);
+      }
+      return { detail, action };
     }
 
     function loadHistoryColumns() {
@@ -1753,27 +1870,37 @@
         const detail = Number(stored.detail);
         const action = Number(stored.action);
         if (!Number.isFinite(detail) || !Number.isFinite(action)) throw new Error("invalid");
-        return { detail: clamp(detail, 26, 56), action: clamp(action, 18, 46) };
+        return normalizeHistoryColumns(detail, action);
       } catch {
-        return { detail: 50, action: 30 };
+        return normalizeHistoryColumns(44, 26);
       }
     }
 
     function saveHistoryColumns() {
       localStorage.setItem(historyColumnStoreKey, JSON.stringify(historyColumns));
+      scheduleCloudSave();
     }
 
     function applyHistoryColumns() {
       const table = $("#historyTable");
       if (!table) return;
+      historyColumns = normalizeHistoryColumns(historyColumns.detail, historyColumns.action);
       table.style.setProperty("--history-detail-col", `${historyColumns.detail}%`);
       table.style.setProperty("--history-action-col", `${historyColumns.action}%`);
     }
 
-    function setSaveState(message, resetMessage = "로컬 저장됨") {
+    function defaultSaveStateText() {
+      return cloudSyncEnabled ? "클라우드 동기화됨" : "로컬 저장됨";
+    }
+
+    function setSaveState(message, resetMessage = defaultSaveStateText()) {
       const target = $("#saveState");
       target.textContent = message;
       if (saveStateTimer) window.clearTimeout(saveStateTimer);
+      if (resetMessage === null) {
+        saveStateTimer = null;
+        return;
+      }
       saveStateTimer = window.setTimeout(() => {
         target.textContent = resetMessage;
         saveStateTimer = null;
@@ -1784,6 +1911,7 @@
       normalizeRecords(records);
       localStorage.setItem(storeKey, JSON.stringify(records));
       setSaveState("저장됨");
+      scheduleCloudSave();
     }
 
     function normalizeDateKey(value) {
@@ -1929,6 +2057,132 @@
       };
     }
 
+    function readUrlSettings() {
+      const searchParams = new URLSearchParams(window.location.search || "");
+      const hashParams = new URLSearchParams((window.location.hash || "").replace(/^#/, ""));
+      return { searchParams, hashParams };
+    }
+
+    function urlValue(...keys) {
+      const { searchParams, hashParams } = readUrlSettings();
+      for (const key of keys) {
+        const value = searchParams.get(key) || hashParams.get(key);
+        if (value) return value;
+      }
+      return "";
+    }
+
+    function getWidgetApiKey() {
+      return WIDGET_API_KEY || urlValue("nk", "key") || "";
+    }
+
+    function getCloudSpace() {
+      return urlValue("space", "ws", "slot") || "work-retro-main";
+    }
+
+    function canUseCloudSync() {
+      return Boolean(WORKER_URL && !WORKER_URL.includes("REPLACE-ME") && getWidgetApiKey());
+    }
+
+    function cloudEndpoint() {
+      return `${WORKER_URL.replace(/\/+$/, "")}/budget-state?space=${encodeURIComponent(getCloudSpace())}`;
+    }
+
+    function cloudHeaders(hasBody = false) {
+      const headers = {};
+      const apiKey = getWidgetApiKey();
+      if (hasBody) headers["Content-Type"] = "application/json";
+      if (apiKey) headers["X-Widget-Key"] = apiKey;
+      return headers;
+    }
+
+    async function loadCloudState() {
+      const response = await fetch(cloudEndpoint(), { headers: cloudHeaders() });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      return data && data.state ? data.state : null;
+    }
+
+    async function saveCloudStateNow() {
+      if (!cloudSyncEnabled || cloudApplyingRemote) return;
+      if (cloudSyncInFlight) {
+        cloudSyncPending = true;
+        return;
+      }
+
+      const payload = exportPayload();
+      const signature = JSON.stringify({
+        records: payload.records,
+        categories: payload.categories,
+        historyColumns: payload.historyColumns,
+        selectedDate: payload.selectedDate,
+        month: payload.month
+      });
+
+      if (signature === cloudLastSignature) return;
+
+      cloudSyncInFlight = true;
+      setSaveState("클라우드 저장 중", null);
+      try {
+        const response = await fetch(cloudEndpoint(), {
+          method: "PUT",
+          headers: cloudHeaders(true),
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        cloudLastSignature = signature;
+        setSaveState("클라우드 저장됨");
+      } catch (error) {
+        console.warn("cloud save failed", error);
+        setSaveState("클라우드 저장 실패", "로컬 저장됨");
+      } finally {
+        cloudSyncInFlight = false;
+        if (cloudSyncPending) {
+          cloudSyncPending = false;
+          scheduleCloudSave(0);
+        }
+      }
+    }
+
+    async function initCloudSync() {
+      if (!canUseCloudSync()) {
+        cloudSyncEnabled = false;
+        setSaveState("로컬 저장됨", null);
+        return;
+      }
+
+      cloudSyncEnabled = true;
+      setSaveState("클라우드 불러오는 중", null);
+      try {
+        const remoteState = await loadCloudState();
+        if (remoteState) {
+          cloudApplyingRemote = true;
+          try {
+            applyImportedJson(remoteState, { message: "클라우드 동기화됨", skipCloudSave: true });
+            const payload = exportPayload();
+            cloudLastSignature = JSON.stringify({
+              records: payload.records,
+              categories: payload.categories,
+              historyColumns: payload.historyColumns,
+              selectedDate: payload.selectedDate,
+              month: payload.month
+            });
+          } finally {
+            cloudApplyingRemote = false;
+          }
+          setSaveState("클라우드 동기화됨", null);
+        } else {
+          setSaveState("클라우드 준비됨");
+          scheduleCloudSave(0);
+        }
+      } catch (error) {
+        cloudSyncEnabled = false;
+        cloudApplyingRemote = false;
+        console.warn("cloud load failed", error);
+        setSaveState("클라우드 연결 실패", "로컬 저장됨");
+      }
+    }
+
     function tryDownloadJson(text = lastExportJson) {
       if (!text) return;
       const blob = new Blob([text], { type: "application/json;charset=utf-8" });
@@ -1983,7 +2237,7 @@
       setSaveState("JSON 생성됨");
     }
 
-    function applyImportedJson(payload) {
+    function applyImportedJson(payload, options = {}) {
       const nextRecords = normalizeRecordMap(payload.records || payload);
       const payloadCategories = Array.isArray(payload.categories) ? payload.categories : [];
       const seen = new Set();
@@ -1997,10 +2251,7 @@
 
       records = nextRecords;
       historyColumns = payload.historyColumns && typeof payload.historyColumns === "object"
-        ? {
-            detail: clamp(Number(payload.historyColumns.detail) || historyColumns.detail, 26, 56),
-            action: clamp(Number(payload.historyColumns.action) || historyColumns.action, 18, 46)
-          }
+        ? normalizeHistoryColumns(payload.historyColumns.detail || historyColumns.detail, payload.historyColumns.action || historyColumns.action)
         : historyColumns;
       selectedDate = normalizeDateKey(payload.selectedDate) || Object.keys(records).sort().pop() || todayKey();
       $("#monthInput").value = payload.month || selectedDate.slice(0, 7);
@@ -2010,7 +2261,8 @@
       saveCategories();
       saveHistoryColumns();
       renderAll();
-      setSaveState("JSON 반영됨");
+      if (!options.skipCloudSave) scheduleCloudSave(0);
+      setSaveState(options.message || "JSON 반영됨");
     }
 
     async function importJsonFromFile(event) {
@@ -2708,6 +2960,7 @@
 
       $("#monthChangeCard").classList.toggle("good", change < 0);
       $("#monthChangeCard").classList.toggle("warn", change > 0);
+      $("#monthChangeCard").classList.toggle("neutral", change === 0);
       $("#streakCard").classList.toggle("good", streak > 0);
       $("#streakCard").classList.toggle("warn", streak === 0);
     }
@@ -2720,6 +2973,15 @@
       $("#impactSelfCount").textContent = `${counts.self}건`;
       $("#impactTeamCount").textContent = `${counts.team}건`;
       $("#impactExternalCount").textContent = `${counts.external}건`;
+      [
+        ["#impactSelfCard", counts.self],
+        ["#impactTeamCard", counts.team],
+        ["#impactExternalCard", counts.external]
+      ].forEach(([selector, count]) => {
+        const card = $(selector);
+        card.classList.toggle("zero", count === 0);
+        card.classList.toggle("has-count", count > 0);
+      });
     }
 
     function renderTrendBars() {
@@ -2756,16 +3018,16 @@
           <article class="month-card">
             <div class="month-card-head">
               <span class="month-title">${row.label}</span>
-              <div class="month-categories">
-                ${(row.categories || []).map((category) => `
-                  <span class="category-chip ${categoryClass(category)}">${escapeHtml(category)}</span>
-                `).join("")}
-              </div>
+              <span class="month-delta ${deltaClass}">${deltaLabel}</span>
+            </div>
+            <div class="month-categories">
+              ${(row.categories || []).map((category) => `
+                <span class="category-chip ${categoryClass(category)}">${escapeHtml(category)}</span>
+              `).join("")}
             </div>
             <div class="month-card-stats">
               <span>실수 ${row.miss}건</span>
               <span>실수 없음 ${row.ok}건</span>
-              <span class="month-delta ${deltaClass}">${deltaLabel}</span>
             </div>
             <p>${tone}</p>
           </article>
@@ -2806,19 +3068,30 @@
         <tr>
           <td class="date">${escapeHtml(row.date)}</td>
           <td>
-            <div class="history-type-stack">
-              <span class="category-chip ${categoryClass(row.category)}">${escapeHtml(row.category)}</span>
-              <span class="impact-badge ${impactClass(row.impact)}">${escapeHtml(impactLabel(row.impact))}</span>
-            </div>
+            <span class="category-chip ${categoryClass(row.category)}">${escapeHtml(row.category)}</span>
+          </td>
+          <td>
+            <span class="impact-badge ${impactClass(row.impact)}">${escapeHtml(impactLabel(row.impact))}</span>
           </td>
           <td>
             <div class="history-detail">${escapeHtml(row.detail)}</div>
           </td>
           <td>
-            <div class="history-action">${escapeHtml(row.nextAction || "-")}</div>
+            <div class="history-action">${row.nextAction
+              ? escapeHtml(row.nextAction)
+              : `<button class="history-action-link" data-edit-date="${escapeHtml(row.sortKey)}" type="button">개선책 추가</button>`}</div>
           </td>
         </tr>
-      `).join("") : `<tr><td colspan="4"><div class="empty">조건에 맞는 실수 히스토리가 없습니다.</div></td></tr>`;
+      `).join("") : `<tr><td colspan="5"><div class="empty">조건에 맞는 실수 히스토리가 없습니다.</div></td></tr>`;
+    }
+
+    function openHistoryRecord(date) {
+      const key = normalizeDateKey(date);
+      if (!key) return;
+      selectedDate = key;
+      $("#monthInput").value = key.slice(0, 7);
+      savedNoticeKey = "";
+      setPage("trend");
     }
 
     function setPage(page) {
@@ -2968,6 +3241,10 @@
         renderHistory();
       }
     });
+    $("#historyBody").addEventListener("click", (event) => {
+      const button = event.target.closest(".history-action-link");
+      if (button) openHistoryRecord(button.dataset.editDate);
+    });
 
     $("#historyDetailResize").addEventListener("pointerdown", (event) => {
       const table = $("#historyTable");
@@ -2978,9 +3255,9 @@
 
       const resize = (moveEvent) => {
         const rect = table.getBoundingClientRect();
-        const fixedPercent = 20;
-        const minDetail = 26;
-        const minAction = 18;
+        const fixedPercent = 30;
+        const minDetail = 24;
+        const minAction = 16;
         const pointerPercent = ((moveEvent.clientX - rect.left) / rect.width) * 100;
         const detail = clamp(pointerPercent - fixedPercent, minDetail, 100 - fixedPercent - minAction);
         historyColumns = {
@@ -3004,6 +3281,7 @@
     selectedDate = todayKey();
     $("#monthInput").value = selectedDate.slice(0, 7);
     renderAll();
+    initCloudSync();
   </script>
 </body>
 </html>
