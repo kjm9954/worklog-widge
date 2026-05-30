@@ -1743,6 +1743,7 @@
   <script>
     const WORKER_URL = "https://notion-widgets-api.wldnjsdkk.workers.dev";
     const WIDGET_API_KEY = "";
+    const USE_MOCK = WORKER_URL === "";
     const CLOUD_SYNC_DEBOUNCE_MS = 1200;
     const storeKey = "retro-calendar-widget-v8";
     const categoryStoreKey = "retro-calendar-widget-categories-v2";
@@ -1907,11 +1908,15 @@
       }, 900);
     }
 
-    function saveRecords() {
+    function saveRecords(changedDate = "") {
       normalizeRecords(records);
       localStorage.setItem(storeKey, JSON.stringify(records));
       setSaveState("저장됨");
-      scheduleCloudSave();
+      if (changedDate) {
+        saveCloudRecordNow(changedDate);
+      } else {
+        scheduleCloudSave();
+      }
     }
 
     function normalizeDateKey(value) {
@@ -2081,11 +2086,15 @@
     }
 
     function canUseCloudSync() {
-      return Boolean(WORKER_URL && !WORKER_URL.includes("REPLACE-ME") && getWidgetApiKey());
+      return Boolean(!USE_MOCK && WORKER_URL && !WORKER_URL.includes("REPLACE-ME") && getWidgetApiKey());
     }
 
-    function cloudEndpoint() {
-      return `${WORKER_URL.replace(/\/+$/, "")}/budget-state?space=${encodeURIComponent(getCloudSpace())}`;
+    function cloudEndpoint(path) {
+      return `${WORKER_URL.replace(/\/+$/, "")}${path}`;
+    }
+
+    function cloudStateEndpoint() {
+      return `${cloudEndpoint("/work-retro/state")}?space=${encodeURIComponent(getCloudSpace())}`;
     }
 
     function cloudHeaders(hasBody = false) {
@@ -2097,10 +2106,36 @@
     }
 
     async function loadCloudState() {
-      const response = await fetch(cloudEndpoint(), { headers: cloudHeaders() });
+      const response = await fetch(cloudStateEndpoint(), { headers: cloudHeaders() });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       return data && data.state ? data.state : null;
+    }
+
+    async function saveCloudRecordNow(date) {
+      if (!cloudSyncEnabled || cloudApplyingRemote || !date) return;
+      const record = recordFor(date);
+      setSaveState("클라우드 저장 중", null);
+      try {
+        const response = await fetch(cloudEndpoint("/work-retro/record"), {
+          method: "POST",
+          headers: cloudHeaders(true),
+          body: JSON.stringify({
+            space: getCloudSpace(),
+            date,
+            status: record.status || "",
+            category: record.category || "",
+            detail: record.detail || "",
+            nextAction: record.nextAction || "",
+            impact: normalizeImpact(record.impact)
+          })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        setSaveState("클라우드 저장됨");
+      } catch (error) {
+        console.warn("cloud record save failed", error);
+        setSaveState("클라우드 저장 실패", "로컬 저장됨");
+      }
     }
 
     async function saveCloudStateNow() {
@@ -2124,7 +2159,7 @@
       cloudSyncInFlight = true;
       setSaveState("클라우드 저장 중", null);
       try {
-        const response = await fetch(cloudEndpoint(), {
+        const response = await fetch(cloudStateEndpoint(), {
           method: "PUT",
           headers: cloudHeaders(true),
           body: JSON.stringify(payload)
@@ -2602,7 +2637,7 @@
       const record = recordFor(key);
       record.status = record.status === status ? "" : status;
       selectedDate = key;
-      saveRecords();
+      saveRecords(key);
       if (status === "miss" && record.status === "miss") {
         setPage("trend");
       } else {
@@ -2877,7 +2912,7 @@
       record.nextAction = $("#recordNextAction").value.trim();
       record.impact = normalizeImpact($("#recordImpactValue").value);
       savedNoticeKey = selectedDate;
-      saveRecords();
+      saveRecords(selectedDate);
       renderAll();
     }
 
