@@ -648,12 +648,12 @@
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, minmax(104px, 1fr));
-      gap: 4px;
+      gap: 3px;
       min-width: 760px;
     }
 
     .weekday {
-      padding: 1px 0 4px;
+      padding: 1px 0 3px;
       color: var(--text-muted);
       font-size: 0.6875rem;
       font-weight: 900;
@@ -661,14 +661,14 @@
     }
 
     .day {
-      min-height: 112px;
+      min-height: 96px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
-      padding: 8px;
+      padding: 7px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 5px;
       transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, opacity 0.15s, transform 0.15s;
     }
 
@@ -678,8 +678,8 @@
       box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }
-    .day.outside { min-height: 112px; background: var(--bg-2); opacity: 0.45; }
-    .day.weekend, .day.no-check, .day.future { min-height: 112px; background: #fafafa; opacity: 0.52; }
+    .day.outside { min-height: 96px; background: var(--bg-2); opacity: 0.45; }
+    .day.weekend, .day.no-check, .day.future { min-height: 96px; background: #fafafa; opacity: 0.52; }
     .day.unchecked:not(.weekend):not(.no-check):not(.future):not(.outside) {
       border: 1px dashed var(--border-strong);
       background: var(--card);
@@ -753,7 +753,7 @@
     .quick-check { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
     .quick-btn {
-      min-height: 30px;
+      min-height: 28px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--bg-2);
@@ -765,6 +765,11 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
+    }
+
+    .day .category-chip {
+      padding: 1px 7px;
+      font-size: 0.625rem;
     }
 
     .quick-icon {
